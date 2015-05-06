@@ -1,11 +1,12 @@
-
+#pragma once
 
 
 class IJVM
 {
+public:
 	__declspec(dllexport) static IJVM *createJVM();
 
-	virtual void initJVM() = 0;
+	virtual void init() = 0;
 
 	virtual void initBenchmark() = 0;
 
@@ -17,8 +18,7 @@ class IJVM
 
 	virtual void tick() = 0;
 
-	//void type is placeholder.
-	virtual void getEvaluationInfo() = 0;
+	virtual int *getEvaluationInfo() = 0;
 
 	//Don't know if i need this method in c++
 	//virtual void buildpythontuple();
@@ -26,13 +26,17 @@ class IJVM
 	//void type is placeholder
 	virtual void getEntireObservation(int p_zLevelScene, int p_zLevelEnemies) = 0;
 
-	//void type is placeholder
-	virtual void getObservationDetails();
+	virtual int *getObservationDetails() = 0;
 
 	//void type is placeholder
-	virtual void performAction(int *p_action);
+	virtual void performAction(int *p_action) = 0;
 
-	__declspec(dllexport) void deleteJVM();
+	__declspec(dllexport) static void deleteJVM(IJVM *p_JVM);
+private:
+	virtual void shutdown() = 0;
+protected:
+	virtual ~IJVM() {};
+
 };
 
 

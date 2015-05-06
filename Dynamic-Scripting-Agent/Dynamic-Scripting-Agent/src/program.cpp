@@ -1,4 +1,5 @@
 #include "Environment.h"
+#include <stdlib.h>
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -13,10 +14,10 @@ int main(int argc, char argv[])
 	Environment env = Environment();
 	env.init();
 	env.run();
+	env.destroy();
 
 
-
-
+	system("pause");
 	DUMP_LEAKS;
 	return 0;
 }
