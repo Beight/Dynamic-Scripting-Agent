@@ -17,7 +17,7 @@ int main(int argc, char argv[])
 	env.destroy();
 
 
-	system("pause");
+	//system("pause");
 	DUMP_LEAKS;
 	return 0;
 }

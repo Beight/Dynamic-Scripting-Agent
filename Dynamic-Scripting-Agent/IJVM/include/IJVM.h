@@ -12,7 +12,7 @@ public:
 
 	virtual void createMarioEnvironment(const char *p_javaClassName) = 0;
 
-	virtual void reset(char* p_options) = 0;
+	virtual void reset(const char* p_options) = 0;
 
 	virtual bool isLevelFinished() = 0;
 

@@ -65,7 +65,7 @@ void JVM::init()
 
 void JVM::initBenchmark()
 {
-	m_idReset = getMethodID("reset", "(Lch/idsia/tools/MarioAIOptions;)V");
+	m_idReset = getMethodID("reset", "(Ljava/lang/String;)V");
 	m_idIsLevelFinished = getMethodID("isLevelFinished", "()Z");
 	m_idTick = getMethodID("tick", "()V");
 	m_idGetEvalutationInfo = getMethodID("getEvaluationInfoAsInts", "()[I");
@@ -90,14 +90,21 @@ void JVM::createMarioEnvironment(const char *p_javaClassName)
 	jmethodID jmid = m_env->GetStaticMethodID(m_jclass, "getInstance", "()Lch/idsia/benchmark/mario/environments/MarioEnvironment;");
 	if (jmid == nullptr)
 	{
+		std::cerr << "Error: Can't find static method getInstance for " << p_javaClassName << "\n";
+		javaError();
+	}
+	m_jobject = m_env->CallStaticObjectMethod(m_jclass, jmid);
+	if (m_jobject == nullptr)
+	{
 		std::cerr << "Error: Can't create object from java class" << p_javaClassName << "\n";
 		javaError();
 	}
 
+
 	initBenchmark();
 }
 
-void JVM::reset(char *p_options)
+void JVM::reset(const char *p_options)
 {
 	jobject options = m_env->NewStringUTF(p_options);
 	m_env->CallVoidMethod(m_jobject, m_idReset, options);

@@ -14,7 +14,7 @@ public:
 	void init() override;
 	void initBenchmark() override;
 	void createMarioEnvironment(const char *p_javaClassName) override;
-	void reset(char *p_options) override;
+	void reset(const char *p_options) override;
 	bool isLevelFinished() override;
 	void tick() override;
 	int *getEvaluationInfo() override;
