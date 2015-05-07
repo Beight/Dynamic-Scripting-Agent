@@ -33,7 +33,7 @@ void Environment::run()
 
 	int seed = 0;
 
-	m_JVM->reset("-ls " + seed);
+	m_JVM->reset("-ag ch.idsia.agents.controllers.ForwardJumpingAgent -echo on");
 	obs = m_JVM->getObservationDetails();
 	//agent.setObservationdetails(obs[0], obs[1], obs[2], [obs3])
 

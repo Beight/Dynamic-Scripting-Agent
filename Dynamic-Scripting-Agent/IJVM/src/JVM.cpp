@@ -108,7 +108,7 @@ void JVM::reset(const char *p_options)
 {
 	jobject options = m_env->NewStringUTF(p_options);
 	m_env->CallVoidMethod(m_jobject, m_idReset, options);
-	//m_env->DeleteLocalRef(options);
+	m_env->DeleteLocalRef(options);
 }
 
 bool JVM::isLevelFinished()
@@ -240,5 +240,4 @@ void JVM::javaError()
 	if (m_env->ExceptionOccurred())
 		m_env->ExceptionDescribe();
 	shutdown();
-
 }
