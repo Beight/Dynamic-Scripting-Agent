@@ -20,8 +20,8 @@
     <ClInclude Include="src\Environment.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IJVM\IJVM.vcxproj">
-      <Project>{8496d46f-e3b2-4994-84c4-ee05dd21bbcc}</Project>
+    <ProjectReference Include="..\Benchmark\Benchmark.vcxproj">
+      <Project>{7c444786-0f6e-4fc5-8c12-d3760384b638}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -56,6 +56,7 @@
     <OutDir>dbg\</OutDir>
     <IntDir>obj\$(Configuration)\</IntDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Benchmark\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin\</OutDir>
@@ -66,7 +67,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\IJVM\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

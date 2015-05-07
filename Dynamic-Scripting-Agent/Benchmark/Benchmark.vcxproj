@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>dbg\</OutDir>
     <IntDir>obj\$(Configuration)\</IntDir>
-    <IncludePath>D:\ExamensArbete\Dynamic-Scripting-Agent\Dynamic-Scripting-Agent\Benchmark\include;C:\Program Files %28x86%29\Java\jdk1.8.0_45\include\win32;C:\Program Files %28x86%29\Java\jdk1.8.0_45\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\include;C:\Program Files %28x86%29\Java\jdk1.8.0_45\include;C:\Program Files %28x86%29\Java\jdk1.8.0_45\include\win32;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Java\jdk1.8.0_45\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

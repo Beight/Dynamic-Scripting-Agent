@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Agent.h"
-#include "IJVM.h"
+#include "IBenchmark.h"
 
 class Environment
 {
@@ -12,5 +12,5 @@ public:
 	void run();
 	void destroy();
 private:
-	IJVM *m_JVM;
+	IBenchmark *m_benchmark;
 };

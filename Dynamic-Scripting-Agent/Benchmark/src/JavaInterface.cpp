@@ -11,7 +11,7 @@ JavaInterface::~JavaInterface()
 {
 }
 
-int JavaInterface::initJava(int p_nOptions, ...)
+int JavaInterface::initJava(int p_nOptions, va_list p_argList)
 {
 	std::cout << "Initializing Java.. \n";
 	if (m_javaEnv != nullptr)
@@ -29,21 +29,11 @@ int JavaInterface::initJava(int p_nOptions, ...)
 	if (p_nOptions > 0)
 	{
 		options = new JavaVMOption[p_nOptions];
-		va_list vl;
-		va_start(vl, p_nOptions);
 		for (int i = 0; i < p_nOptions; i++)
-			options[i].optionString = va_arg(vl, char*);
-
-		va_end(vl);
+			options[i].optionString = va_arg(p_argList, char*);
 
 		vmArgs.options = options;
 	}
-	
-
-	//options[0].optionString = "-Djava.class.path=D:\\ExamensArbete\\Mario-AI-Benchmark\\build\\classes";
-	//options[1].optionString = "-Djava.library.path=D:\\ExamensArbete\\Mario-AI-Benchmark\\lib";
-	
-
 
 	jint result;
 	result = JNI_CreateJavaVM(&m_javaVM, (void**)&m_javaEnv, &vmArgs);
@@ -55,7 +45,7 @@ int JavaInterface::initJava(int p_nOptions, ...)
 			delete[] options;
 		return -1;
 	}
-	if (options != nullptr);
+	if (options != nullptr)
 		delete[] options;
 
 	std::cout << "Initialization of Java finished. JVM created succesfully \n";
@@ -71,7 +61,10 @@ jclass JavaInterface::createJavaClass(const char *p_javaClassName)
 		std::cerr << "Error: Can't find Java class " << p_javaClassName << ".\n";
 		m_javaEnv->ExceptionDescribe();
 	}
-	
+	else
+		std::cout << "Java class " << p_javaClassName << " found.\n";
+
+	return javaClass;
 }
 
 jmethodID JavaInterface::getMethodID(const jclass &p_javaClass, const char *p_mName, const char *p_mSig)
@@ -82,6 +75,9 @@ jmethodID JavaInterface::getMethodID(const jclass &p_javaClass, const char *p_mN
 		std::cerr << "Error: Can't find Java method id for " << p_mName << ".\n";
 		m_javaEnv->ExceptionDescribe();
 	}
+	else
+		std::cout << "Java method " << p_mName << " found! id: " << jmid << "\n";
+	
 	return jmid;
 }
 
@@ -93,6 +89,9 @@ jmethodID JavaInterface::getStaticMethodID(const jclass &p_javaClass, const char
 		std::cerr << "Error: Can't find Java static method id for " << p_mName << ".\n";
 		m_javaEnv->ExceptionDescribe();
 	}
+	else
+		std::cout << "Java static method " << p_mName << " found! id: " << jmid << "\n";
+
 	return jmid;
 }
 
@@ -165,6 +164,26 @@ jobject JavaInterface::callJavaStaticObjectMethod(const jclass &p_javaClass, con
 		m_javaEnv->ExceptionDescribe();
 	}
 	return object;
+}
+
+void JavaInterface::delLocalRef(jobject p_delObj)
+{
+	m_javaEnv->DeleteLocalRef(p_delObj);
+}
+
+void JavaInterface::releaseIntArrayElem(jintArray &p_delarray, jint *p_elems, int mode)
+{
+	m_javaEnv->ReleaseIntArrayElements(p_delarray, p_elems, mode);
+}
+
+void JavaInterface::releaseFloatArrayElem(jfloatArray &p_delarray, jfloat *p_elems, int mode)
+{
+	m_javaEnv->ReleaseFloatArrayElements(p_delarray, p_elems, mode);
+}
+
+void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_elems, int mode)
+{
+	m_javaEnv->ReleaseBooleanArrayElements(p_delarray, p_elems, mode);
 }
 
 void JavaInterface::shutdownJava()

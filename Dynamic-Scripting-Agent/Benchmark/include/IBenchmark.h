@@ -1,11 +1,11 @@
 #pragma once
 
-class IBenchMark
+class IBenchmark
 {
 public:
-	__declspec(dllexport) static IBenchMark *createBenchMark();
+	__declspec(dllexport) static IBenchmark *createBenchmark();
 
-	virtual void init() = 0;
+	virtual int init(int p_numJavaOptions, ...) = 0;
 
 	virtual void reset(const char* p_options) = 0;
 
@@ -26,13 +26,13 @@ public:
 	//void type is placeholder
 	virtual void performAction(int *p_action) = 0;
 
-	__declspec(dllexport) static void destroyBenchmark(IBenchMark *p_benchmark);
+	__declspec(dllexport) static void destroyBenchmark(IBenchmark *p_benchmark);
 
 private:
 	virtual void shutdown() = 0;
-	virtual void createMarioEnvironment(const char *p_javaClassName) = 0;
+	virtual void getMethodIds() = 0;
 
 protected:
-	virtual ~IBenchMark() {};
+	virtual ~IBenchmark() {};
 
 };
