@@ -22,19 +22,21 @@ int JavaInterface::initJava(int p_nOptions, va_list p_argList)
 	JavaVMInitArgs vmArgs;
 	vmArgs.version = JNI_VERSION_1_8;
 	vmArgs.ignoreUnrecognized = JNI_FALSE;
-	vmArgs.nOptions = p_nOptions;
+	vmArgs.nOptions = p_nOptions + 1;
 
-	JavaVMOption *options = nullptr;
-	
+	 JavaVMOption *options = new JavaVMOption[p_nOptions + 1];
+
 	if (p_nOptions > 0)
-	{
-		options = new JavaVMOption[p_nOptions];
+	{	
 		for (int i = 0; i < p_nOptions; i++)
-			options[i].optionString = va_arg(p_argList, char*);
-
-		vmArgs.options = options;
+		{
+				options[i].optionString = va_arg(p_argList, char*);
+		}
 	}
 
+	options[p_nOptions].optionString = "-verbose:jni";
+
+	vmArgs.options = options;
 	jint result;
 	result = JNI_CreateJavaVM(&m_javaVM, (void**)&m_javaEnv, &vmArgs);
 
@@ -48,7 +50,7 @@ int JavaInterface::initJava(int p_nOptions, va_list p_argList)
 	if (options != nullptr)
 		delete[] options;
 
-	std::cout << "Initialization of Java finished. JVM created succesfully \n";
+	std::cout << "Initialization of Java finished. JVM created succesfully. \n";
 
 	return 0;
 }
@@ -95,11 +97,12 @@ jmethodID JavaInterface::getStaticMethodID(const jclass &p_javaClass, const char
 	return jmid;
 }
 
-void JavaInterface::callJavaVoidMethod(const jobject &p_javaObject, const jmethodID &p_methodId, ...)
+void JavaInterface::callJavaVoidMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...)
 {
 	va_list arg;
 	va_start(arg, p_methodId);
-	m_javaEnv->CallVoidMethod(p_javaObject, p_methodId, arg);
+	jobject str = m_javaEnv->NewStringUTF("-vis on");
+	m_javaEnv->CallVoidMethod(p_javaObject, p_methodId, str);
 	va_end(arg);
 	if (m_javaEnv->ExceptionOccurred())
 	{
@@ -108,7 +111,7 @@ void JavaInterface::callJavaVoidMethod(const jobject &p_javaObject, const jmetho
 	}
 }
 
-int JavaInterface::callJavaIntMethod(const jobject &p_javaObject, const jmethodID &p_methodId, ...)
+int JavaInterface::callJavaIntMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...)
 {
 	va_list arg;
 	va_start(arg, p_methodId);
@@ -123,7 +126,7 @@ int JavaInterface::callJavaIntMethod(const jobject &p_javaObject, const jmethodI
 }
 
 
-bool JavaInterface::callJavaBooleanMethod(const jobject &p_javaObject, const jmethodID &p_methodId, ...)
+bool JavaInterface::callJavaBooleanMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...)
 {
 	va_list arg;
 	va_start(arg, p_methodId);
@@ -137,7 +140,7 @@ bool JavaInterface::callJavaBooleanMethod(const jobject &p_javaObject, const jme
 	return javabool;
 }
 
-jobject JavaInterface::callJavaObjectMethod(const jobject &p_javaObject, const jmethodID &p_methodId, ...)
+jobject JavaInterface::callJavaObjectMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...)
 {
 	va_list arg;
 	va_start(arg, p_methodId);
@@ -151,12 +154,12 @@ jobject JavaInterface::callJavaObjectMethod(const jobject &p_javaObject, const j
 	return javabool;
 }
 
-jobject JavaInterface::callJavaStaticObjectMethod(const jclass &p_javaClass, const jmethodID &p_methodId, ...)
+jobject JavaInterface::callJavaStaticObjectMethod(const jclass &p_javaClass, const jmethodID p_methodId, ...)
 {
 	va_list arg;
 	va_start(arg, p_methodId);
-	jobject object = nullptr;
-	object = m_javaEnv->CallStaticObjectMethodV(p_javaClass, p_methodId, arg);
+
+	jobject object = m_javaEnv->CallStaticObjectMethodV(p_javaClass, p_methodId, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionOccurred())
 	{
@@ -176,7 +179,7 @@ void JavaInterface::releaseIntArrayElem(jintArray &p_delarray, jint *p_elems, in
 	m_javaEnv->ReleaseIntArrayElements(p_delarray, p_elems, mode);
 }
 
-void JavaInterface::releaseFloatArrayElem(jfloatArray &p_delarray, jfloat *p_elems, int mode)
+void JavaInterface::releaseFloatArrayElem(jfloatArray& p_delarray, jfloat *p_elems, int mode)
 {
 	m_javaEnv->ReleaseFloatArrayElements(p_delarray, p_elems, mode);
 }
@@ -185,6 +188,56 @@ void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_
 {
 	m_javaEnv->ReleaseBooleanArrayElements(p_delarray, p_elems, mode);
 }
+
+int *JavaInterface::javaIntArrayToCArray(jintArray &p_array)
+{
+	jint *ptr = m_javaEnv->GetIntArrayElements(p_array, 0);
+	jsize size = m_javaEnv->GetArrayLength(p_array);
+	int *ret = new int[size];
+
+	for (int i = 0; i < size; i++)
+		ret[i] = ptr[i];
+
+	m_javaEnv->ReleaseIntArrayElements(p_array, ptr, 0);
+	m_javaEnv->DeleteLocalRef(p_array);
+
+	return ret;
+}
+
+
+float *JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array)
+{
+	jfloat *ptr = m_javaEnv->GetFloatArrayElements(p_array, 0);
+	jsize size = m_javaEnv->GetArrayLength(p_array);
+	float *ret = new float[size];
+
+	for (int i = 0; i < size; i++)
+		ret[i] = ptr[i];
+
+	m_javaEnv->ReleaseFloatArrayElements(p_array, ptr, 0);
+	m_javaEnv->DeleteLocalRef(p_array);
+
+	return ret;
+}
+
+jbooleanArray JavaInterface::cIntArrayToJavaBoolArray(int *p_array, jboolean *p_aPtr, const int p_aSize)
+{
+	jbooleanArray ar = m_javaEnv->NewBooleanArray(p_aSize);
+
+	for (int i = 0; i < p_aSize; i++)
+		p_aPtr[i] = p_array[i];
+
+	m_javaEnv->SetBooleanArrayRegion(ar, 0, p_aSize, p_aPtr);
+
+	return ar;
+}
+
+jobject JavaInterface::cStringToJavaString(const char *p_string)
+{
+	jobject str = m_javaEnv->NewStringUTF(p_string);
+	return str;
+}
+
 
 void JavaInterface::shutdownJava()
 {

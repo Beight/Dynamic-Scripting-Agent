@@ -1,5 +1,6 @@
 #include "Environment.h"
 #include <stdlib.h>
+#include <fstream>
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -11,13 +12,32 @@
 int main(int argc, char argv[])
 {
 	SET_DBG_FLAG;
-	Environment env = Environment();
-	env.init();
-	env.run();
-	env.destroy();
+
+	//std::ofstream logfile("logfile.txt", std::ofstream::trunc);
+	try
+	{
+		Environment env = Environment();
+		if (env.init() < 0)
+			return -1;
+
+		env.run();
+		env.destroy();
+	}
+	catch (std::exception& err)
+	{
+		//logfile << err.what();
+		//logfile.close();
+		return EXIT_FAILURE;
+	}
+	catch (...)
+	{
+		//logfile.close();
+		return EXIT_FAILURE;
+	}
+
+	//logfile.close();
 
 
-	//system("pause");
 	DUMP_LEAKS;
-	return 0;
+	return EXIT_SUCCESS;
 }

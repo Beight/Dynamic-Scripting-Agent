@@ -6,10 +6,25 @@
 class Environment
 {
 public:
+	/*
+
+	*/
 	Environment();
+	/*
+
+	*/
 	~Environment();
-	void init();
+	/*
+
+	*/
+	int init();
+	/*
+
+	*/
 	void run();
+	/*
+
+	*/
 	void destroy();
 private:
 	IBenchmark *m_benchmark;
