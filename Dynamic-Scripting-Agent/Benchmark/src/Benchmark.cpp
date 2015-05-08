@@ -104,6 +104,18 @@ void Benchmark::getEntireObservation(int p_zLevelScene, int p_zLevelEnemies)
 	jintArray marioState = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioState, p_zLevelEnemies);
 	int *mState = m_jInterface.javaIntArrayToCArray(marioState);
 
+
+
+	delete[] lvlScene;
+	delete[] EnScene;
+	delete[] mPos;
+	delete[] mState;
+	delete[] EnPos;
+	//m_jInterface.delLocalRef(serializedLvlScene);
+	//m_jInterface.delLocalRef(serializedEnemiesScene);
+	//m_jInterface.delLocalRef(marioPos);
+	//m_jInterface.delLocalRef(enemiesPos);
+	//m_jInterface.delLocalRef(marioState);
 	//return data to environment class somwhow....
 	//1. send in parameters as refernces and modify values in the method.
 	//2. create a struct and return it.

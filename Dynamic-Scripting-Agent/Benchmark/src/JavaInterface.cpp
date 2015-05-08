@@ -189,7 +189,7 @@ void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_
 	m_javaEnv->ReleaseBooleanArrayElements(p_delarray, p_elems, mode);
 }
 
-void *JavaInterface::javaIntArrayToCArray(jintArray &p_array, int *p_target)
+int *JavaInterface::javaIntArrayToCArray(jintArray &p_array)
 {
 	jint *ptr = m_javaEnv->GetIntArrayElements(p_array, 0);
 	jsize size = m_javaEnv->GetArrayLength(p_array);
@@ -205,7 +205,7 @@ void *JavaInterface::javaIntArrayToCArray(jintArray &p_array, int *p_target)
 }
 
 
-float *JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array, float *p_target)
+float *JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array)
 {
 	jfloat *ptr = m_javaEnv->GetFloatArrayElements(p_array, 0);
 	jsize size = m_javaEnv->GetArrayLength(p_array);

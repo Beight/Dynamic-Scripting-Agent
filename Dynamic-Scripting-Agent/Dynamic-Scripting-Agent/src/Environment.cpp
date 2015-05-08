@@ -18,20 +18,21 @@ int Environment::init()
 		return res;
 
 	m_benchmark->reset("-vis on");
+
+	return res;
 }
 
 void Environment::run()
 {
 	m_benchmark->getEntireObservation(1, 1);
-	int action[6] = { 0, 1, 0, 1, 1, 0 };
+	int action[6] = { 0, 1, 0, 1, 0, 0 };
 	m_benchmark->performAction(action);
 	int *eval = m_benchmark->getEvaluationInfo();
 	int *obs = m_benchmark->getObservationDetails();
 
-	m_benchmark->reset("-vis on -echo on");
+	m_benchmark->reset("-vis on -echo on -tl 5");
 	obs = m_benchmark->getObservationDetails();
 	//agent.setObservationdetails(obs[0], obs[1], obs[2], [obs3])
-
 
 	while (!m_benchmark->isLevelFinished())
 	{
@@ -41,29 +42,9 @@ void Environment::run()
 		//agent.getaction();
 		m_benchmark->performAction(action);
 	}
+	delete[] obs;
 
-	//m_JVM->getEntireObservation(1,1);
-	//int action[6] = { 0, 1, 0, 1, 1, 0 };
-	//m_JVM->performAction(action);
-	//int *eval = m_JVM->getEvaluationInfo();
-	//int *obs = m_JVM->getObservationDetails();
-
-	//int seed = 0;
-
-	//m_JVM->reset("-ag ch.idsia.agents.controllers.ForwardJumpingAgent -echo on");
-	//obs = m_JVM->getObservationDetails();
-	////agent.setObservationdetails(obs[0], obs[1], obs[2], [obs3])
-
-
-
-	//while (!m_JVM->isLevelFinished())
-	//{
-	//	m_JVM->tick();
-	//	m_JVM->getEntireObservation(1, 0);
-	//	//agent.integrateobservation();
-	//	//agent.getaction();
-	//	m_JVM->performAction(action);
-	//}
+	eval = m_benchmark->getEvaluationInfo();
 }
 
 void Environment::destroy()
