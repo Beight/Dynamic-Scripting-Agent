@@ -81,6 +81,9 @@ int *Benchmark::getEvaluationInfo()
 {
 	jintArray a = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEvalutationInfo);
 
+	if (a == nullptr)
+		return nullptr;
+
 	return m_jInterface.javaIntArrayToCArray(a);
 }
 
@@ -122,8 +125,8 @@ void Benchmark::performAction(int *p_action)
 
 	m_jInterface.callJavaVoidMethod(m_marioEnvObj, m_mIdPerformAction, action);
 
-
-//	m_jInterface.releaseBoolArrayElem(action, ptr, 0);
+	
+	//m_jInterface.releaseBoolArrayElem(action, ptr, 0);
 	m_jInterface.delLocalRef(action);
 	delete ptr;
 }

@@ -22,21 +22,22 @@ int JavaInterface::initJava(int p_nOptions, va_list p_argList)
 	JavaVMInitArgs vmArgs;
 	vmArgs.version = JNI_VERSION_1_8;
 	vmArgs.ignoreUnrecognized = JNI_FALSE;
-	vmArgs.nOptions = p_nOptions + 1;
+	vmArgs.nOptions = p_nOptions;
 
-	 JavaVMOption *options = new JavaVMOption[p_nOptions + 1];
+	JavaVMOption *options = nullptr;
 
 	if (p_nOptions > 0)
 	{	
+		options = new JavaVMOption[p_nOptions];
 		for (int i = 0; i < p_nOptions; i++)
 		{
 				options[i].optionString = va_arg(p_argList, char*);
 		}
+		vmArgs.options = options;
 	}
 
-	options[p_nOptions].optionString = "-verbose:jni";
 
-	vmArgs.options = options;
+
 	jint result;
 	result = JNI_CreateJavaVM(&m_javaVM, (void**)&m_javaEnv, &vmArgs);
 
@@ -101,8 +102,7 @@ void JavaInterface::callJavaVoidMethod(const jobject &p_javaObject, const jmetho
 {
 	va_list arg;
 	va_start(arg, p_methodId);
-	jobject str = m_javaEnv->NewStringUTF("-vis on");
-	m_javaEnv->CallVoidMethod(p_javaObject, p_methodId, str);
+	m_javaEnv->CallVoidMethodV(p_javaObject, p_methodId, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionOccurred())
 	{
@@ -144,14 +144,14 @@ jobject JavaInterface::callJavaObjectMethod(const jobject &p_javaObject, const j
 {
 	va_list arg;
 	va_start(arg, p_methodId);
-	jobject javabool = m_javaEnv->CallObjectMethod(p_javaObject, p_methodId, arg);
+	jobject javaObj = m_javaEnv->CallObjectMethodV(p_javaObject, p_methodId, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionOccurred())
 	{
 		std::cerr << "Error: Calling Java object method failed. Id: " << p_methodId << "\n";
 		m_javaEnv->ExceptionDescribe();
 	}
-	return javabool;
+	return javaObj;
 }
 
 jobject JavaInterface::callJavaStaticObjectMethod(const jclass &p_javaClass, const jmethodID p_methodId, ...)
@@ -159,14 +159,14 @@ jobject JavaInterface::callJavaStaticObjectMethod(const jclass &p_javaClass, con
 	va_list arg;
 	va_start(arg, p_methodId);
 
-	jobject object = m_javaEnv->CallStaticObjectMethodV(p_javaClass, p_methodId, arg);
+	jobject javaObj = m_javaEnv->CallStaticObjectMethodV(p_javaClass, p_methodId, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionOccurred())
 	{
 		std::cerr << "Error: Calling Java static object method failed. Id: " << p_methodId << "\n";
 		m_javaEnv->ExceptionDescribe();
 	}
-	return object;
+	return javaObj;
 }
 
 void JavaInterface::delLocalRef(jobject p_delObj)
@@ -189,7 +189,7 @@ void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_
 	m_javaEnv->ReleaseBooleanArrayElements(p_delarray, p_elems, mode);
 }
 
-int *JavaInterface::javaIntArrayToCArray(jintArray &p_array)
+void *JavaInterface::javaIntArrayToCArray(jintArray &p_array, int *p_target)
 {
 	jint *ptr = m_javaEnv->GetIntArrayElements(p_array, 0);
 	jsize size = m_javaEnv->GetArrayLength(p_array);
@@ -205,7 +205,7 @@ int *JavaInterface::javaIntArrayToCArray(jintArray &p_array)
 }
 
 
-float *JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array)
+float *JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array, float *p_target)
 {
 	jfloat *ptr = m_javaEnv->GetFloatArrayElements(p_array, 0);
 	jsize size = m_javaEnv->GetArrayLength(p_array);
