@@ -11,15 +11,14 @@ Environment::~Environment()
 }
 int Environment::init()
 {
-	int res = 0;
 	m_benchmark = IBenchmark::createBenchmark();
-	res = m_benchmark->init(2, "-Djava.class.path=D:\\ExamensArbete\\Mario-AI-Benchmark\\build\\classes", "-Djava.library.path=D:\\ExamensArbete\\Mario-AI-Benchmark\\lib");
-	if (res < 0)
-		return res;
+	int result = m_benchmark->init(2, "-Djava.class.path=..\\..\\..\\Mario-AI-Benchmark\\dist\\Mario_AI_Benchmark.jar");
+	if (result < 0)
+		return result;
 
 	m_benchmark->reset("-vis on");
 
-	return res;
+	return result;
 }
 
 void Environment::run()
@@ -45,6 +44,8 @@ void Environment::run()
 	delete[] obs;
 
 	eval = m_benchmark->getEvaluationInfo();
+	delete[] eval;
+	
 }
 
 void Environment::destroy()

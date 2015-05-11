@@ -39,8 +39,7 @@ int Benchmark::init(int p_numJavaOptions, ...)
 	int res = m_jInterface.initJava(p_numJavaOptions, args);
 	va_end(args);
 	
-
-	if (res < 0)
+	if (res != 0)
 	{
 		return res;
 	}
@@ -51,8 +50,14 @@ int Benchmark::init(int p_numJavaOptions, ...)
 	  so there's no need to let the user change it.
 	*/
 	m_marioEnvCl = m_jInterface.createJavaClass("ch/idsia/benchmark/mario/environments/MarioEnvironment");
+	if (m_marioEnvCl == nullptr)
+		return -1;
+
 	jmethodID mid = m_jInterface.getStaticMethodID(m_marioEnvCl, "getInstance", "()Lch/idsia/benchmark/mario/environments/MarioEnvironment;");
+
 	m_marioEnvObj = m_jInterface.callJavaStaticObjectMethod(m_marioEnvCl, mid);
+	if (m_marioEnvObj == nullptr)
+		return -1;
 
 	getMethodIds();
 
@@ -65,6 +70,7 @@ void Benchmark::reset(const char *p_options)
 {
 	jobject options = m_jInterface.cStringToJavaString(p_options);
 	m_jInterface.callJavaVoidMethod(m_marioEnvObj, m_mIdReset, options);
+	m_jInterface.delLocalRef(options);
 }
 
 bool Benchmark::isLevelFinished()
@@ -79,29 +85,28 @@ void Benchmark::tick()
 
 int *Benchmark::getEvaluationInfo()
 {
-	jintArray a = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEvalutationInfo);
+	jintArray a = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEvalutationInfo, 0);
 
-	if (a == nullptr)
-		return nullptr;
+	int *ret = m_jInterface.javaIntArrayToCArray(a);
 
-	return m_jInterface.javaIntArrayToCArray(a);
+	return ret;
 }
 
 void Benchmark::getEntireObservation(int p_zLevelScene, int p_zLevelEnemies)
 {
-	jintArray serializedLvlScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedLevelSceneObservationZ, p_zLevelScene);
+	jintArray serializedLvlScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedLevelSceneObservationZ, 1, p_zLevelScene);
 	int *lvlScene = m_jInterface.javaIntArrayToCArray(serializedLvlScene);
 
-	jintArray serializedEnemiesScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedEnemiesObservationZ, p_zLevelEnemies);
+	jintArray serializedEnemiesScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedEnemiesObservationZ, 1, p_zLevelEnemies);
 	int *EnScene = m_jInterface.javaIntArrayToCArray(serializedEnemiesScene);
 
-	jfloatArray marioPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioPos, p_zLevelEnemies);
+	jfloatArray marioPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioPos, 1,p_zLevelEnemies);
 	float *mPos = m_jInterface.javaFloatArrayToCArray(marioPos);
 
-	jfloatArray enemiesPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEnemiesPos, p_zLevelEnemies);
+	jfloatArray enemiesPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEnemiesPos, 1, p_zLevelEnemies);
 	float *EnPos = m_jInterface.javaFloatArrayToCArray(enemiesPos);
 
-	jintArray marioState = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioState, p_zLevelEnemies);
+	jintArray marioState = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioState, 1, p_zLevelEnemies);
 	int *mState = m_jInterface.javaIntArrayToCArray(marioState);
 
 
@@ -111,11 +116,6 @@ void Benchmark::getEntireObservation(int p_zLevelScene, int p_zLevelEnemies)
 	delete[] mPos;
 	delete[] mState;
 	delete[] EnPos;
-	//m_jInterface.delLocalRef(serializedLvlScene);
-	//m_jInterface.delLocalRef(serializedEnemiesScene);
-	//m_jInterface.delLocalRef(marioPos);
-	//m_jInterface.delLocalRef(enemiesPos);
-	//m_jInterface.delLocalRef(marioState);
 	//return data to environment class somwhow....
 	//1. send in parameters as refernces and modify values in the method.
 	//2. create a struct and return it.
@@ -140,7 +140,7 @@ void Benchmark::performAction(int *p_action)
 	
 	//m_jInterface.releaseBoolArrayElem(action, ptr, 0);
 	m_jInterface.delLocalRef(action);
-	delete ptr;
+	delete[] ptr;
 }
 
 void Benchmark::getMethodIds()
@@ -160,6 +160,8 @@ void Benchmark::getMethodIds()
 
 void Benchmark::shutdown()
 {
+	m_jInterface.delGlobalRef(m_marioEnvObj);
+	m_jInterface.delGlobalRef(m_marioEnvCl);
 	m_jInterface.shutdownJava();
 }
 

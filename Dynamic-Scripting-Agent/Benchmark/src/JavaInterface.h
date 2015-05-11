@@ -51,6 +51,10 @@ public:
 	/*
 
 	*/
+	void delGlobalRef(jobject p_delObj);
+	/*
+
+	*/
 	void releaseIntArrayElem(jintArray &p_delarray, jint *p_elems, int mode);
 	/*
 
