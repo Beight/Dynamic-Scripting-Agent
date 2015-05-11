@@ -11,7 +11,7 @@ JavaInterface::~JavaInterface()
 {
 }
 
-int JavaInterface::initJava(int p_nOptions, va_list p_argList)
+int JavaInterface::initJava(int p_nOptions, va_list p_optionList)
 {
 	std::cout << "Initializing Java.. \n";
 	if (m_javaEnv != nullptr)
@@ -31,7 +31,7 @@ int JavaInterface::initJava(int p_nOptions, va_list p_argList)
 		options = new JavaVMOption[p_nOptions];
 		for (int i = 0; i < p_nOptions; i++)
 		{
-				options[i].optionString = va_arg(p_argList, char*);
+			options[i].optionString = va_arg(p_optionList, char*);
 		}
 		vmArgs.options = options;
 	}
