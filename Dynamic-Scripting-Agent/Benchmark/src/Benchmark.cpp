@@ -160,8 +160,8 @@ void Benchmark::getMethodIds()
 
 void Benchmark::shutdown()
 {
-	m_jInterface.delGlobalRef(m_marioEnvObj);
-	m_jInterface.delGlobalRef(m_marioEnvCl);
+	m_jInterface.delLocalRef(m_marioEnvObj);
+	m_jInterface.delLocalRef(m_marioEnvCl);
 	m_jInterface.shutdownJava();
 }
 

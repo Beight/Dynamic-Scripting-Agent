@@ -12,7 +12,7 @@ Environment::~Environment()
 int Environment::init()
 {
 	m_benchmark = IBenchmark::createBenchmark();
-	int result = m_benchmark->init(2, "-Djava.class.path=..\\..\\..\\Mario-AI-Benchmark\\dist\\Mario_AI_Benchmark.jar");
+	int result = m_benchmark->init(1, "-Djava.class.path=..\\..\\..\\Mario-AI-Benchmark\\dist\\Mario_AI_Benchmark.jar");
 	if (result < 0)
 		return result;
 
