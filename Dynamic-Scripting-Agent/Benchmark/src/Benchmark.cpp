@@ -61,8 +61,6 @@ int Benchmark::init(int p_numJavaOptions, ...)
 
 	getMethodIds();
 
-
-
 	return 0;
 }
 
@@ -89,27 +87,35 @@ int *Benchmark::getEvaluationInfo()
 
 	int *ret = m_jInterface.javaIntArrayToCArray(a);
 
+	m_jInterface.delLocalRef(a);
+
 	return ret;
 }
 
 void Benchmark::getEntireObservation(int p_zLevelScene, int p_zLevelEnemies)
 {
-	jintArray serializedLvlScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedLevelSceneObservationZ, 1, p_zLevelScene);
+	jintArray serializedLvlScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedLevelSceneObservationZ, p_zLevelScene);
 	int *lvlScene = m_jInterface.javaIntArrayToCArray(serializedLvlScene);
 
-	jintArray serializedEnemiesScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedEnemiesObservationZ, 1, p_zLevelEnemies);
+	jintArray serializedEnemiesScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedEnemiesObservationZ, p_zLevelEnemies);
 	int *EnScene = m_jInterface.javaIntArrayToCArray(serializedEnemiesScene);
 
-	jfloatArray marioPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioPos, 1,p_zLevelEnemies);
+	jfloatArray marioPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioPos, p_zLevelEnemies);
 	float *mPos = m_jInterface.javaFloatArrayToCArray(marioPos);
 
-	jfloatArray enemiesPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEnemiesPos, 1, p_zLevelEnemies);
+	jfloatArray enemiesPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEnemiesPos, p_zLevelEnemies);
 	float *EnPos = m_jInterface.javaFloatArrayToCArray(enemiesPos);
 
-	jintArray marioState = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioState, 1, p_zLevelEnemies);
+	jintArray marioState = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioState, p_zLevelEnemies);
 	int *mState = m_jInterface.javaIntArrayToCArray(marioState);
 
 
+
+	//m_jInterface.delLocalRef(serializedLvlScene);
+	//m_jInterface.delLocalRef(serializedEnemiesScene);
+	//m_jInterface.delLocalRef(marioPos);
+	//m_jInterface.delLocalRef(enemiesPos);
+	//m_jInterface.delLocalRef(marioState);
 
 	delete[] lvlScene;
 	delete[] EnScene;
@@ -126,6 +132,8 @@ int *Benchmark::getObservationDetails()
 	jintArray obsDet = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetObservationDetails, 0);
 
 	int *details = m_jInterface.javaIntArrayToCArray(obsDet);
+
+	m_jInterface.delLocalRef(obsDet);
 
 	return details;
 }

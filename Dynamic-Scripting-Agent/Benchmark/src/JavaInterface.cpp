@@ -187,19 +187,19 @@ void JavaInterface::delGlobalRef(jobject p_delObj)
 	m_javaEnv->DeleteGlobalRef(p_delObj);
 }
 
-void JavaInterface::releaseIntArrayElem(jintArray &p_delarray, jint *p_elems, int mode)
+void JavaInterface::releaseIntArrayElem(jintArray &p_delarray, jint *p_elems, int p_mode)
 {
-	m_javaEnv->ReleaseIntArrayElements(p_delarray, p_elems, mode);
+	m_javaEnv->ReleaseIntArrayElements(p_delarray, p_elems, p_mode);
 }
 
-void JavaInterface::releaseFloatArrayElem(jfloatArray& p_delarray, jfloat *p_elems, int mode)
+void JavaInterface::releaseFloatArrayElem(jfloatArray& p_delarray, jfloat *p_elems, int p_mode)
 {
-	m_javaEnv->ReleaseFloatArrayElements(p_delarray, p_elems, mode);
+	m_javaEnv->ReleaseFloatArrayElements(p_delarray, p_elems, p_mode);
 }
 
-void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_elems, int mode)
+void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_elems, int p_mode)
 {
-	m_javaEnv->ReleaseBooleanArrayElements(p_delarray, p_elems, mode);
+	m_javaEnv->ReleaseBooleanArrayElements(p_delarray, p_elems, p_mode);
 }
 
 int *JavaInterface::javaIntArrayToCArray(jintArray &p_array)
