@@ -16,21 +16,15 @@ int Environment::init()
 	if (result < 0)
 		return result;
 
-	m_benchmark->reset("-vis on");
-
 	return result;
 }
 
 void Environment::run()
 {
-	m_benchmark->getEntireObservation(1, 1);
 	int action[6] = { 0, 1, 0, 1, 0, 0 };
-	m_benchmark->performAction(action);
-	int *eval = m_benchmark->getEvaluationInfo();
-	int *obs = m_benchmark->getObservationDetails();
 
-	m_benchmark->reset("-vis on -echo on -tl 5");
-	obs = m_benchmark->getObservationDetails();
+	m_benchmark->reset("-vis off -echo on");
+	int *obs = m_benchmark->getObservationDetails();
 	//agent.setObservationdetails(obs[0], obs[1], obs[2], [obs3])
 
 	while (!m_benchmark->isLevelFinished())
@@ -43,7 +37,7 @@ void Environment::run()
 	}
 	delete[] obs;
 
-	eval = m_benchmark->getEvaluationInfo();
+	int *eval = m_benchmark->getEvaluationInfo();
 	delete[] eval;
 	
 }
