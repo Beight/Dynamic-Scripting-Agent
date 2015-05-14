@@ -1,6 +1,8 @@
 #pragma once
 
 #include <jni.h>
+#include <memory>
+#include <vector>
 
 class JavaInterface
 {
@@ -171,7 +173,7 @@ public:
 	*	@param p_array: Array to be converted
 	*	@return: Pointer to the int array containing the converted elememts
 	*/
-	int *javaIntArrayToCArray(jintArray &p_array);
+	void javaIntArrayToCArray(jintArray &p_array, std::vector<int> &p_ret);
 
 	/*
 	*	Converts an Java float array into a C float array.
@@ -179,7 +181,7 @@ public:
 	*	@param p_array: Array to be converted
 	*	@return: Pointer to the float array containing the converted elememts
 	*/
-	float *javaFloatArrayToCArray(jfloatArray &p_array);
+	void javaFloatArrayToCArray(jfloatArray &p_array, std::vector<float> &p_ret);
 
 	/*
 	*	Converts an C int array into a Java boolean array.
@@ -189,7 +191,7 @@ public:
 	*	@param p_aSize: Size of the array to be converted.
 	*	@return: A Java boolean array.
 	*/
-	jbooleanArray cIntArrayToJavaBoolArray(int *p_array, jboolean *p_aPtr ,const int p_aSize);
+	jbooleanArray cIntArrayToJavaBoolArray(std::vector<int> p_array, jboolean *p_aPtr, const int p_aSize);
 
 	/*
 	*	Converts a C string into a Java string which can be used as a parameter in a Java method call.
@@ -205,8 +207,8 @@ public:
 	void shutdownJava();
 
 private:
-	JNIEnv_ *m_javaEnv;
-	JavaVM *m_javaVM;
+	std::unique_ptr<JNIEnv_> m_javaEnv;
+	std::unique_ptr<JavaVM> m_javaVM;
 	
 
 };

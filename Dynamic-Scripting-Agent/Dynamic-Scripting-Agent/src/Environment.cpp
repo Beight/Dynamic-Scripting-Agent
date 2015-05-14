@@ -21,10 +21,11 @@ int Environment::init()
 
 void Environment::run()
 {
-	int action[6] = { 0, 1, 0, 1, 0, 0 };
+	std::vector<int> action = { 0, 1, 0, 1, 0, 0 };
 
-	m_benchmark->reset("-vis off -echo on");
-	int *obs = m_benchmark->getObservationDetails();
+	m_benchmark->reset("-vis on -echo on");
+	std::vector<int> obs;
+	m_benchmark->getObservationDetails(obs);
 	//agent.setObservationdetails(obs[0], obs[1], obs[2], [obs3])
 
 	while (!m_benchmark->isLevelFinished())
@@ -35,11 +36,9 @@ void Environment::run()
 		//agent.getaction();
 		m_benchmark->performAction(action);
 	}
-	delete[] obs;
-
-	int *eval = m_benchmark->getEvaluationInfo();
-	delete[] eval;
-	
+	std::vector<int> eval;
+	m_benchmark->getEvaluationInfo(eval);
+	int j = 43;
 }
 
 void Environment::destroy()

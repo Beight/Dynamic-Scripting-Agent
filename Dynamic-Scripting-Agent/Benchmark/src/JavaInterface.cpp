@@ -39,7 +39,7 @@ int JavaInterface::initJava(int p_nOptions, va_list p_optionList)
 
 
 	jint result;
-	result = JNI_CreateJavaVM(&m_javaVM, (void**)&m_javaEnv, &vmArgs);
+	result = JNI_CreateJavaVM((JavaVM**)&m_javaVM, (void**)&m_javaEnv, &vmArgs);
 
 	if (result < 0)
 	{
@@ -202,43 +202,37 @@ void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_
 	m_javaEnv->ReleaseBooleanArrayElements(p_delarray, p_elems, p_mode);
 }
 
-int *JavaInterface::javaIntArrayToCArray(jintArray &p_array)
+void JavaInterface::javaIntArrayToCArray(jintArray &p_array, std::vector<int> &p_ret)
 {
 	jint *ptr = m_javaEnv->GetIntArrayElements(p_array, 0);
 	jsize size = m_javaEnv->GetArrayLength(p_array);
-	int *ret = new int[size];
 
 	for (int i = 0; i < size; i++)
-		ret[i] = ptr[i];
+		p_ret.push_back(ptr[i]);
 
 	m_javaEnv->ReleaseIntArrayElements(p_array, ptr, 0);
 	m_javaEnv->DeleteLocalRef(p_array);
-
-	return ret;
 }
 
 
-float *JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array)
+void JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array, std::vector<float> &p_ret)
 {
 	jfloat *ptr = m_javaEnv->GetFloatArrayElements(p_array, 0);
 	jsize size = m_javaEnv->GetArrayLength(p_array);
-	float *ret = new float[size];
 
 	for (int i = 0; i < size; i++)
-		ret[i] = ptr[i];
+		p_ret.push_back(ptr[i]);
 
 	m_javaEnv->ReleaseFloatArrayElements(p_array, ptr, 0);
 	m_javaEnv->DeleteLocalRef(p_array);
-
-	return ret;
 }
 
-jbooleanArray JavaInterface::cIntArrayToJavaBoolArray(int *p_array, jboolean *p_aPtr, const int p_aSize)
+jbooleanArray JavaInterface::cIntArrayToJavaBoolArray(std::vector<int> p_array, jboolean *p_aPtr, const int p_aSize)
 {
 	jbooleanArray ar = m_javaEnv->NewBooleanArray(p_aSize);
 
 	for (int i = 0; i < p_aSize; i++)
-		p_aPtr[i] = p_array[i];
+		p_aPtr[i] = p_array.at(i);
 
 	m_javaEnv->SetBooleanArrayRegion(ar, 0, p_aSize, p_aPtr);
 
@@ -254,10 +248,10 @@ jobject JavaInterface::cStringToJavaString(const char *p_string)
 
 void JavaInterface::shutdownJava()
 {
+	m_javaEnv.release();
 	if (m_javaVM != nullptr)
 	{
 		m_javaVM->DestroyJavaVM();
-		m_javaVM = nullptr;
+		m_javaVM.release();
 	}
-	 m_javaEnv = nullptr;
 }

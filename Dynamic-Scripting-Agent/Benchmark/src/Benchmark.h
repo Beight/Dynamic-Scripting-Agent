@@ -14,10 +14,10 @@ public:
 	void reset(const char *p_options) override;
 	bool isLevelFinished() override;
 	void tick() override;
-	int *getEvaluationInfo() override;
+	void getEvaluationInfo(std::vector<int> &p_ret) override;
 	void getEntireObservation(int p_zLevelScene, int p_zLevelEnemies) override;
-	int *getObservationDetails() override;
-	void performAction(int *p_action) override;
+	void getObservationDetails(std::vector<int> &p_ret) override;
+	void performAction(const std::vector<int> &p_action) override;
 
 
 private:

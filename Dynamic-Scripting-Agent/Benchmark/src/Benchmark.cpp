@@ -81,64 +81,54 @@ void Benchmark::tick()
 	m_jInterface.callJavaVoidMethod(m_marioEnvObj, m_mIdTick);
 }
 
-int *Benchmark::getEvaluationInfo()
+void Benchmark::getEvaluationInfo(std::vector<int> &p_ret)
 {
 	jintArray a = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEvalutationInfo, 0);
 
-	int *ret = m_jInterface.javaIntArrayToCArray(a);
+	m_jInterface.javaIntArrayToCArray(a, p_ret);
 
 	m_jInterface.delLocalRef(a);
-
-	return ret;
 }
 
 void Benchmark::getEntireObservation(int p_zLevelScene, int p_zLevelEnemies)
 {
+	std::vector<int> lvlScene;
+	std::vector<int> EnemiesScene;
+	std::vector<float> mPos;
+	std::vector<float> ePos;
+	std::vector<int> mState;
+
 	jintArray serializedLvlScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedLevelSceneObservationZ, p_zLevelScene);
-	int *lvlScene = m_jInterface.javaIntArrayToCArray(serializedLvlScene);
+	
+	m_jInterface.javaIntArrayToCArray(serializedLvlScene, lvlScene);
 
 	jintArray serializedEnemiesScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedEnemiesObservationZ, p_zLevelEnemies);
-	int *EnScene = m_jInterface.javaIntArrayToCArray(serializedEnemiesScene);
+	 m_jInterface.javaIntArrayToCArray(serializedEnemiesScene, EnemiesScene);
 
 	jfloatArray marioPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioPos, p_zLevelEnemies);
-	float *mPos = m_jInterface.javaFloatArrayToCArray(marioPos);
+	m_jInterface.javaFloatArrayToCArray(marioPos, mPos);	
 
 	jfloatArray enemiesPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEnemiesPos, p_zLevelEnemies);
-	float *EnPos = m_jInterface.javaFloatArrayToCArray(enemiesPos);
+	m_jInterface.javaFloatArrayToCArray(enemiesPos, ePos);
 
 	jintArray marioState = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioState, p_zLevelEnemies);
-	int *mState = m_jInterface.javaIntArrayToCArray(marioState);
+	m_jInterface.javaIntArrayToCArray(marioState, mState);
 
-
-
-	//m_jInterface.delLocalRef(serializedLvlScene);
-	//m_jInterface.delLocalRef(serializedEnemiesScene);
-	//m_jInterface.delLocalRef(marioPos);
-	//m_jInterface.delLocalRef(enemiesPos);
-	//m_jInterface.delLocalRef(marioState);
-
-	delete[] lvlScene;
-	delete[] EnScene;
-	delete[] mPos;
-	delete[] mState;
-	delete[] EnPos;
 	//return data to environment class somwhow....
 	//1. send in parameters as refernces and modify values in the method.
 	//2. create a struct and return it.
 }
 
-int *Benchmark::getObservationDetails()
+void Benchmark::getObservationDetails(std::vector<int> &p_ret)
 {
 	jintArray obsDet = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetObservationDetails, 0);
 
-	int *details = m_jInterface.javaIntArrayToCArray(obsDet);
+	m_jInterface.javaIntArrayToCArray(obsDet, p_ret);
 
 	m_jInterface.delLocalRef(obsDet);
-
-	return details;
 }
 
-void Benchmark::performAction(int *p_action)
+void Benchmark::performAction(const std::vector<int> &p_action)
 {
 	jboolean *ptr = new jboolean[m_numberOfButtons];
 	jbooleanArray action = m_jInterface.cIntArrayToJavaBoolArray(p_action, ptr, m_numberOfButtons);

@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 class IBenchmark
 {
@@ -60,7 +61,7 @@ public:
 	*	Array[12] = Time Spent;
 	*	Array[13] = Hidden Blocks Found;
 	*/
-	virtual int *getEvaluationInfo() = 0;
+	virtual void getEvaluationInfo(std::vector<int> &p_ret) = 0;
 
 	//Don't know if i need this method in c++
 	//virtual void buildpythontuple();
@@ -85,12 +86,12 @@ public:
 	*	Array[2] = Mario pos;
 	*	Array[3] = Kills By Fire;
 	*/
-	virtual int *getObservationDetails() = 0;
+	virtual void getObservationDetails(std::vector<int> &p_ret) = 0;
 	/*
 
 	*/
 	//void type is placeholder
-	virtual void performAction(int *p_action) = 0;
+	virtual void performAction(const std::vector<int> &p_action) = 0;
 	/*
 
 	*/
