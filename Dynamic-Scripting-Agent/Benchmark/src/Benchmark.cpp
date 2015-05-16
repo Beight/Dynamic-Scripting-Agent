@@ -90,33 +90,38 @@ void Benchmark::getEvaluationInfo(std::vector<int> &p_ret)
 	m_jInterface.delLocalRef(a);
 }
 
-void Benchmark::getEntireObservation(int p_zLevelScene, int p_zLevelEnemies)
+IBenchmark::Observation Benchmark::getEntireObservation(int p_zLevelScene, int p_zLevelEnemies)
 {
 	std::vector<int> lvlScene;
 	std::vector<int> EnemiesScene;
 	std::vector<float> mPos;
 	std::vector<float> ePos;
 	std::vector<int> mState;
+	IBenchmark::Observation obs;
+
 
 	jintArray serializedLvlScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedLevelSceneObservationZ, p_zLevelScene);
 	
-	m_jInterface.javaIntArrayToCArray(serializedLvlScene, lvlScene);
+	m_jInterface.javaIntArrayToCArray(serializedLvlScene, obs.lvlScene);
 
 	jintArray serializedEnemiesScene = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetSerializedEnemiesObservationZ, p_zLevelEnemies);
-	 m_jInterface.javaIntArrayToCArray(serializedEnemiesScene, EnemiesScene);
+	 m_jInterface.javaIntArrayToCArray(serializedEnemiesScene, obs.enemyScene);
 
 	jfloatArray marioPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioPos, p_zLevelEnemies);
-	m_jInterface.javaFloatArrayToCArray(marioPos, mPos);	
+	m_jInterface.javaFloatArrayToCArray(marioPos, obs.marioPos);	
 
 	jfloatArray enemiesPos = (jfloatArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetEnemiesPos, p_zLevelEnemies);
-	m_jInterface.javaFloatArrayToCArray(enemiesPos, ePos);
+	m_jInterface.javaFloatArrayToCArray(enemiesPos, obs.enemyPos);
 
 	jintArray marioState = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioState, p_zLevelEnemies);
-	m_jInterface.javaIntArrayToCArray(marioState, mState);
+	m_jInterface.javaIntArrayToCArray(marioState, obs.marioState);
 
 	//return data to environment class somwhow....
 	//1. send in parameters as refernces and modify values in the method.
 	//2. create a struct and return it.
+	return obs;
+
+
 }
 
 void Benchmark::getObservationDetails(std::vector<int> &p_ret)

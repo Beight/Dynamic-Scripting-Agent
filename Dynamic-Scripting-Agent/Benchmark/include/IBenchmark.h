@@ -4,6 +4,14 @@
 class IBenchmark
 {
 public:
+	struct Observation
+	{
+		std::vector<int> lvlScene;
+		std::vector<int> enemyScene;
+		std::vector<int> marioState;
+		std::vector<float> marioPos;
+		std::vector<float> enemyPos;
+	};
 	/*
 	*	Creates the benchmark.
 	*	
@@ -75,7 +83,7 @@ public:
 	*	@param p_levelEnemies: Has to do with observation detail. Enter 0 to be safe.
 	*	OBS! VOID TYPE IS A PLACEHOLDER!! THIS FUNCTION NEEDS TO RETURN ITS DATA!!
 	*/
-	virtual void getEntireObservation(int p_zLevelScene, int p_zLevelEnemies) = 0;
+	virtual Observation getEntireObservation(int p_zLevelScene, int p_zLevelEnemies) = 0;
 
 	/*
 	*	Gets details such as the agents receptivefield and poistion.
@@ -83,8 +91,8 @@ public:
 	*	@return: an array containing the details.
 	*	Array[0] = Receptive field width;
 	*	Array[1] = Receptive field height;
-	*	Array[2] = Mario pos;
-	*	Array[3] = Kills By Fire;
+	*	Array[2] = Mario pos X.
+	*	Array[3] = Mario pos Y.;
 	*/
 	virtual void getObservationDetails(std::vector<int> &p_ret) = 0;
 	/*

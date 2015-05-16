@@ -15,7 +15,7 @@ public:
 	bool isLevelFinished() override;
 	void tick() override;
 	void getEvaluationInfo(std::vector<int> &p_ret) override;
-	void getEntireObservation(int p_zLevelScene, int p_zLevelEnemies) override;
+	IBenchmark::Observation getEntireObservation(int p_zLevelScene, int p_zLevelEnemies) override;
 	void getObservationDetails(std::vector<int> &p_ret) override;
 	void performAction(const std::vector<int> &p_action) override;
 

@@ -28,4 +28,5 @@ public:
 	void destroy();
 private:
 	IBenchmark *m_benchmark;
+	Agent m_agent;
 };

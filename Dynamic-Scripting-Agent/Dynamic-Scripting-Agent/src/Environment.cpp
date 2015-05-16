@@ -1,7 +1,8 @@
 #include "Environment.h"
 
 
-Environment::Environment() : m_benchmark(nullptr)
+Environment::Environment() : m_benchmark(nullptr),
+							 m_agent(Agent())
 {
 }
 
@@ -15,26 +16,23 @@ int Environment::init()
 	int result = m_benchmark->init(1, "-Djava.class.path=..\\..\\..\\Mario-AI-Benchmark\\dist\\Mario_AI_Benchmark.jar");
 	if (result < 0)
 		return result;
-
+	m_agent.init();
 	return result;
 }
 
 void Environment::run()
 {
-	std::vector<int> action = { 0, 1, 0, 1, 0, 0 };
-
 	m_benchmark->reset("-vis on -echo on");
-	std::vector<int> obs;
-	m_benchmark->getObservationDetails(obs);
-	//agent.setObservationdetails(obs[0], obs[1], obs[2], [obs3])
+	std::vector<int> obsDet;
+	m_benchmark->getObservationDetails(obsDet);
+	m_agent.setObservationDetails(obsDet.at(0), obsDet.at(1), obsDet.at(2), obsDet.at(3));
 
 	while (!m_benchmark->isLevelFinished())
 	{
 		m_benchmark->tick();
-		m_benchmark->getEntireObservation(1, 0);
-		//agent.integrateobservation();
-		//agent.getaction();
-		m_benchmark->performAction(action);
+		IBenchmark::Observation obs = m_benchmark->getEntireObservation(1, 0);
+		m_agent.integrateObservation(obs.lvlScene, obs.enemyScene, obs.marioState, obs.marioPos, obs.enemyPos);
+		m_benchmark->performAction(m_agent.getAction());
 	}
 	std::vector<int> eval;
 	m_benchmark->getEvaluationInfo(eval);
