@@ -16,7 +16,8 @@ Agent::Agent() : m_name(""),
 				 m_receptiveFieldheight(0),
 				 m_marioEgoRow(0),
 				 m_marioEgoCol(0),
-				 m_enemiesPos()
+				 m_enemiesPos(),
+				 m_ruleCount(0)
 {
 }
 
@@ -83,7 +84,53 @@ std::vector<int> Agent::getAction()
 	return m_action;
 }
 
-void Agent::danger()
+bool Agent::danger()
 {
+	return false;
+}
 
+void Agent::updateWeights()
+{}
+
+void Agent::clearScript()
+{}
+
+void Agent::generateScript()
+{
+	clearScript();
+	int sumWeights = 0;
+	int maxt = 10;
+	for (unsigned int i = 0; i < m_ruleBase.size(); i++)
+		sumWeights = sumWeights + m_ruleBase.at(i).weight;
+
+	for (int i = 0; i < m_ruleCount; i++)
+	{
+		int t = 0;
+		bool lineadded = false;
+		while (t < maxt && !lineadded)
+		{
+			int j = 0;
+			int sum = 0;
+			int selected = -1;
+			int fraction = rand() % sumWeights;
+			
+			while (selected < 0)
+			{
+				sum = sum + m_ruleBase.at(j).weight;
+				if (sum > fraction)
+					selected = j;
+				else
+					j = j + 1;
+			}
+			lineadded = insertInScript(m_ruleBase.at(selected).script);
+			t = t + 1;
+		}
+	}
+	//Finish Script();
+}
+
+
+bool insertInScript(std::string p_script)
+{
+	return true;
 }

@@ -6,6 +6,18 @@
 class Agent
 {
 public:
+	struct Rule
+	{
+		std::string script;
+		float weight;
+		bool active;
+
+		Rule(std::string p_script, float p_startWeight) :	script(p_script),
+															weight(p_startWeight),
+															active(false)
+		{}							 
+	};
+
 	Agent();
 	~Agent();
 
@@ -37,8 +49,13 @@ private:
 	float m_marioPos[2];
 	std::vector<float> m_enemiesPos;
 	std::vector<int> m_lvlScene;
-
+	std::vector<Rule> m_ruleBase;
+	int m_ruleCount;
 
 	bool danger();
+	void updateWeights();
+	void clearScript();
+	void generateScript();
+	bool insertInScript(std::string p_script);
 };
 
