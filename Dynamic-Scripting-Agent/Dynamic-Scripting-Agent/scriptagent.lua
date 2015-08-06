@@ -10,11 +10,11 @@ isMarioCarrying = false
 
 
 function init()
-	action = {0, 1, 0, 0, 1, 0}
-	return action
-	end
+	action[2] = 1
+	action[5] = 1
+end
 
-function getAction()
+
 	
 	
 	

@@ -17,7 +17,7 @@ Agent::Agent() : m_name(""),
 				 m_marioEgoRow(0),
 				 m_marioEgoCol(0),
 				 m_enemiesPos(),
-				 m_script()
+				 m_script(LuaScript())
 {
 }
 
@@ -30,11 +30,8 @@ void Agent::init()
 	m_script.loadScript("scriptagent.lua");
 	m_script.getGlobal("init");
 	m_script.callFunction(0, 0);
-	m_script.getGlobal("action");
 
-
-
-	m_action = { 0, 1, 0, 0, 1, 0 };
+	m_action = m_script.getIntVector("action");
 	//lua??
 }
 
