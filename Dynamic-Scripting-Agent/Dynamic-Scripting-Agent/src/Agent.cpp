@@ -16,7 +16,8 @@ Agent::Agent() : m_name(""),
 				 m_receptiveFieldheight(0),
 				 m_marioEgoRow(0),
 				 m_marioEgoCol(0),
-				 m_enemiesPos()
+				 m_enemiesPos(),
+				 m_script()
 {
 }
 
@@ -26,6 +27,13 @@ Agent::~Agent()
 
 void Agent::init()
 {
+	m_script.loadScript("scriptagent.lua");
+	m_script.getGlobal("init");
+	m_script.callFunction(0, 0);
+	m_script.getGlobal("action");
+
+
+
 	m_action = { 0, 1, 0, 0, 1, 0 };
 	//lua??
 }
@@ -73,7 +81,7 @@ void Agent::integrateObservation(const std::vector<int> &p_lvlScene, const std::
 	m_killsByStomp = p_marioState.at(8);
 	m_killsByShell = p_marioState.at(9);
 
-
+	//lua?
 }
 
 std::vector<int> Agent::getAction()

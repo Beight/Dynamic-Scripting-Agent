@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\LuaScript.cpp" />
     <ClCompile Include="src\Environment.cpp" />
     <ClCompile Include="src\Agent.cpp" />
     <ClCompile Include="src\program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LuaScript.h" />
     <ClInclude Include="src\Agent.h" />
     <ClInclude Include="src\Environment.h" />
   </ItemGroup>
@@ -55,13 +57,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>dbg\</OutDir>
     <IntDir>obj\$(Configuration)\</IntDir>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Benchmark\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\luaWin32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Benchmark\include;C:\luaWin32\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>bin\</OutDir>
     <IntDir>obj\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)Benchmark\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Benchmark\include;C:\luaWin32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\luaWin32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -72,8 +75,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>lua53.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,14 +85,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\luaWin32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>lua53.lib</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>

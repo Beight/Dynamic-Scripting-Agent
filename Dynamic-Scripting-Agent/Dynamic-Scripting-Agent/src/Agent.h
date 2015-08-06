@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include "LuaScript.h"
 
 class Agent
 {
@@ -37,8 +38,9 @@ private:
 	float m_marioPos[2];
 	std::vector<float> m_enemiesPos;
 	std::vector<int> m_lvlScene;
+	LuaScript m_script;
 
 
-	bool danger();
+	void danger();
 };
 
