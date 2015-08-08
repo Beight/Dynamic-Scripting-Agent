@@ -76,9 +76,9 @@ void Agent::integrateObservation(const std::vector<int> &p_lvlScene, const std::
 	//m_killsByShell = p_marioState.at(9); //sent to lua
 
 
-	//m_script.vectorToLuaTable(p_marioPos, "marioPos");
-	//m_script.vectorToLuaTable(p_enemyPos, "enemyPos");
-	m_script.intVectorToLuaTable(p_marioState, "marioState");
+	m_script.vectorToLuaTable(p_marioPos, "marioPos");
+	m_script.vectorToLuaTable(p_enemyPos, "enemyPos");
+	m_script.vectorToLuaTable(p_marioState, "marioState");
 	m_script.callFunction("integrateObservation", 0, 0);
 }
 

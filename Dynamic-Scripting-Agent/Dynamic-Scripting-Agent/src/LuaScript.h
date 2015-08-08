@@ -23,15 +23,13 @@ public:
 		lua_createtable(m_state, p_vectorToTransfer.size(), 0);
 		int newTable = lua_gettop(m_state);
 		int index = 1;
-		std::vector<T>::const_iterator iter = p_vectorToTransfer.begin();
-		while (iter == p_vectorToTransfer.end())
+
+		for (unsigned int i = 0; i < p_vectorToTransfer.size(); i++)
 		{
-			lua_pushnumber(m_state, (*iter));
+			lua_pushnumber(m_state, p_vectorToTransfer.at(i));
 			lua_rawseti(m_state, newTable, index);
-			iter++;
 			index++;
 		}
-
 
 		lua_setglobal(m_state, p_tableName.c_str());
 	}

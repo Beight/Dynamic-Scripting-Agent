@@ -1,5 +1,7 @@
 action = {0, 0, 0, 0, 0, 0}
 marioState = {}
+marioPos = {}
+enemyPos = {}
 mariomode = 0
 marioStatus = 0
 isMarioOnGround = false
