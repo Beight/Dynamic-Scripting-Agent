@@ -17,7 +17,7 @@ Agent::Agent() : m_name(""),
 				 m_marioEgoRow(0),
 				 m_marioEgoCol(0),
 				 m_enemiesPos(),
-				 m_script(LuaScript())
+				 m_script(LuaScript("scriptagent.lua"))
 {
 }
 
@@ -27,12 +27,8 @@ Agent::~Agent()
 
 void Agent::init()
 {
-	m_script.loadScript("scriptagent.lua");
-	m_script.getGlobal("init");
-	m_script.callFunction(0, 0);
-
+	m_script.callFunction("init", 0, 0);
 	m_action = m_script.getIntVector("action");
-	//lua??
 }
 
 void Agent::setObservationDetails(int p_receptiveWidth, int p_receptiveHeight, int p_marioPosRow, int p_marioPosCol)
@@ -67,23 +63,31 @@ void Agent::integrateObservation(const std::vector<int> &p_lvlScene, const std::
 	m_enemiesPos = p_enemyPos;
 
 
-	m_marioStatus = p_marioState.at(0);
-	m_marioMode = p_marioState.at(1);
+	//m_marioStatus = p_marioState.at(0);
+	//m_marioMode = p_marioState.at(1);
 	m_isMarioOnGround = p_marioState.at(2);
 	m_isMarioAbleToJump = p_marioState.at(3);
-	m_isMarioAbleToShoot = p_marioState.at(4);
-	m_isMarioCarrying = p_marioState.at(5);
-	m_killsTotal = p_marioState.at(6);
-	m_killsByFire = p_marioState.at(7);
-	m_killsByStomp = p_marioState.at(8);
-	m_killsByShell = p_marioState.at(9);
+	//m_isMarioAbleToShoot = p_marioState.at(4);
+	//m_isMarioCarrying = p_marioState.at(5);
+	//m_killsTotal = p_marioState.at(6);
+	//m_killsByFire = p_marioState.at(7);
+	//m_killsByStomp = p_marioState.at(8);
+	//m_killsByShell = p_marioState.at(9); //sent to lua
 
-	//lua?
+
+	//m_script.vectorToLuaTable(p_marioPos, "marioPos");
+	//m_script.vectorToLuaTable(p_enemyPos, "enemyPos");
+	m_script.intVectorToLuaTable(p_marioState, "marioState");
+	m_script.callFunction("integrateObservation", 0, 0);
 }
 
 std::vector<int> Agent::getAction()
 {
-	m_action.at(3) = !m_isMarioOnGround || m_isMarioAbleToJump;
+	m_script.callFunction("getAction", 0, 0);
+	m_action = m_script.getIntVector("action");
+	bool b = !m_isMarioOnGround || m_isMarioAbleToJump;
+	bool a = m_script.getonground(); //isMarioAbleToJump uppdateras inte ordentligt i lua
+	///m_action.at(3) = !m_isMarioOnGround || m_isMarioAbleToJump;
 
 	return m_action;
 }
