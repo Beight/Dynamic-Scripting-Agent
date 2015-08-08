@@ -27,6 +27,8 @@ public:
 	void integrateObservation(const std::vector<int> &p_lvlScene, const std::vector<int> &p_enmeyScene, const std::vector<int> &p_marioState, const std::vector<float> &p_marioPos, const std::vector<float> &p_enemyPos);
 	std::vector<int> getAction();
 	void reset();
+	//std::string getName();
+	//void setName(std::string p_newName);
 
 private:
 	std::string m_name;
@@ -48,13 +50,20 @@ private:
 	float m_marioPos[2];
 	std::vector<float> m_enemiesPos;
 	std::vector<int> m_lvlScene;
+<<<<<<< HEAD
 	LuaScript m_script;
+
+
+	void danger();
+=======
 	std::vector<Rule> m_ruleBase;
 	int m_ruleCount;
 
+	bool danger();
 	void updateWeights();
 	void clearScript();
 	void generateScript();
-	bool insertInScript(const std::string &p_script);
+	bool insertInScript(std::string p_script);
+>>>>>>> origin/Lua_Forward_Agent
 };
 

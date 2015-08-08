@@ -17,8 +17,11 @@ Agent::Agent() : m_name(""),
 				 m_marioEgoRow(0),
 				 m_marioEgoCol(0),
 				 m_enemiesPos(),
-				 m_script(LuaScript("scriptagent.lua")),
+<<<<<<< HEAD
+				 m_script(LuaScript("scriptagent.lua"))
+=======
 				 m_ruleCount(0)
+>>>>>>> origin/Lua_Forward_Agent
 {
 }
 
@@ -66,8 +69,8 @@ void Agent::integrateObservation(const std::vector<int> &p_lvlScene, const std::
 
 	//m_marioStatus = p_marioState.at(0);
 	//m_marioMode = p_marioState.at(1);
-	//m_isMarioOnGround = p_marioState.at(2);
-	//m_isMarioAbleToJump = p_marioState.at(3);
+	m_isMarioOnGround = p_marioState.at(2);
+	m_isMarioAbleToJump = p_marioState.at(3);
 	//m_isMarioAbleToShoot = p_marioState.at(4);
 	//m_isMarioCarrying = p_marioState.at(5);
 	//m_killsTotal = p_marioState.at(6);
@@ -86,10 +89,16 @@ std::vector<int> Agent::getAction()
 {
 	m_script.callFunction("getAction", 0, 0);
 	m_action = m_script.getIntVector("action");
-
-	///m_action.at(3) = !m_isMarioOnGround || m_isMarioAbleToJump; //moved to lua
+	bool b = !m_isMarioOnGround || m_isMarioAbleToJump;
+	bool a = m_script.getonground(); //isMarioAbleToJump uppdateras inte ordentligt i lua
+	///m_action.at(3) = !m_isMarioOnGround || m_isMarioAbleToJump;
 
 	return m_action;
+}
+
+bool Agent::danger()
+{
+	return false;
 }
 
 void Agent::updateWeights()
@@ -133,7 +142,7 @@ void Agent::generateScript()
 }
 
 
-bool Agent::insertInScript(const std::string &p_script)
+bool insertInScript(std::string p_script)
 {
 	return true;
 }

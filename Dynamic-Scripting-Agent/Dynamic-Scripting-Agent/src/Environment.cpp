@@ -36,7 +36,6 @@ void Environment::run()
 	}
 	std::vector<int> eval;
 	m_benchmark->getEvaluationInfo(eval);
-	int j = 43;
 }
 
 void Environment::destroy()
