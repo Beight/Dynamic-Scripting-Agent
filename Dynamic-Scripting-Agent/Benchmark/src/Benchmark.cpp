@@ -135,15 +135,13 @@ void Benchmark::getObservationDetails(std::vector<int> &p_ret)
 
 void Benchmark::performAction(const std::vector<int> &p_action)
 {
-	jboolean *ptr = new jboolean[m_numberOfButtons];
-	jbooleanArray action = m_jInterface.cIntArrayToJavaBoolArray(p_action, ptr, m_numberOfButtons);
+
+	jbooleanArray action = m_jInterface.cIntArrayToJavaBoolArray(p_action, m_numberOfButtons);
 
 	m_jInterface.callJavaVoidMethod(m_marioEnvObj, m_mIdPerformAction, action);
 
-	
-	//m_jInterface.releaseBoolArrayElem(action, ptr, 0);
+
 	m_jInterface.delLocalRef(action);
-	delete[] ptr;
 }
 
 void Benchmark::getMethodIds()

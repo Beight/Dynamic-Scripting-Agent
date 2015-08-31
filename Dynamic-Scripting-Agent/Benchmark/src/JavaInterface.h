@@ -191,7 +191,7 @@ public:
 	*	@param p_aSize: Size of the array to be converted.
 	*	@return: A Java boolean array.
 	*/
-	jbooleanArray cIntArrayToJavaBoolArray(std::vector<int> p_array, jboolean *p_aPtr, const int p_aSize);
+	jbooleanArray cIntArrayToJavaBoolArray(const std::vector<int> &p_array, const int p_aSize);
 
 	/*
 	*	Converts a C string into a Java string which can be used as a parameter in a Java method call.

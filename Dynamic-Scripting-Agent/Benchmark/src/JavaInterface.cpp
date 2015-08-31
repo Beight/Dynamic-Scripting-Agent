@@ -24,16 +24,15 @@ int JavaInterface::initJava(int p_nOptions, va_list p_optionList)
 	vmArgs.ignoreUnrecognized = JNI_FALSE;
 	vmArgs.nOptions = p_nOptions;
 
-	JavaVMOption *options = nullptr;
+	std::vector<JavaVMOption> options(p_nOptions);
 
 	if (p_nOptions > 0)
 	{	
-		options = new JavaVMOption[p_nOptions];
 		for (int i = 0; i < p_nOptions; i++)
 		{
-			options[i].optionString = va_arg(p_optionList, char*);
+			options.at(i).optionString = va_arg(p_optionList, char*);
 		}
-		vmArgs.options = options;
+		vmArgs.options = options.data();
 	}
 
 
@@ -44,12 +43,10 @@ int JavaInterface::initJava(int p_nOptions, va_list p_optionList)
 	if (result < 0)
 	{
 		std::cerr << "Error: Creating Java Virtual Machine failed! \n";
-		if (options != nullptr)
-			delete[] options;
+		options.clear();
 		return result;
 	}
-	if (options != nullptr)
-		delete[] options;
+	options.clear();
 
 	std::cout << "Initialization of Java finished. JVM created succesfully. \n";
 
@@ -204,37 +201,38 @@ void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_
 
 void JavaInterface::javaIntArrayToCArray(jintArray &p_array, std::vector<int> &p_ret)
 {
-	jint *ptr = m_javaEnv->GetIntArrayElements(p_array, 0);
+	std::unique_ptr<jint> ptr(m_javaEnv->GetIntArrayElements(p_array, 0));
 	jsize size = m_javaEnv->GetArrayLength(p_array);
 
 	for (int i = 0; i < size; i++)
-		p_ret.push_back(ptr[i]);
+		p_ret.push_back(ptr.get()[i]);
 
-	m_javaEnv->ReleaseIntArrayElements(p_array, ptr, 0);
+	m_javaEnv->ReleaseIntArrayElements(p_array, ptr.release(), 0);
 	m_javaEnv->DeleteLocalRef(p_array);
 }
 
 
 void JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array, std::vector<float> &p_ret)
 {
-	jfloat *ptr = m_javaEnv->GetFloatArrayElements(p_array, 0);
+	std::unique_ptr<jfloat> ptr(m_javaEnv->GetFloatArrayElements(p_array, 0));
 	jsize size = m_javaEnv->GetArrayLength(p_array);
 
 	for (int i = 0; i < size; i++)
-		p_ret.push_back(ptr[i]);
+		p_ret.push_back(ptr.get()[i]);
 
-	m_javaEnv->ReleaseFloatArrayElements(p_array, ptr, 0);
+	m_javaEnv->ReleaseFloatArrayElements(p_array, ptr.release(), 0);
 	m_javaEnv->DeleteLocalRef(p_array);
 }
 
-jbooleanArray JavaInterface::cIntArrayToJavaBoolArray(std::vector<int> p_array, jboolean *p_aPtr, const int p_aSize)
+jbooleanArray JavaInterface::cIntArrayToJavaBoolArray(const std::vector<int> &p_array, const int p_aSize)
 {
 	jbooleanArray ar = m_javaEnv->NewBooleanArray(p_aSize);
+	std::vector<jboolean> arrayPtr(p_aSize);
 
 	for (int i = 0; i < p_aSize; i++)
-		p_aPtr[i] = p_array.at(i);
+		arrayPtr.at(i) = p_array.at(i);
 
-	m_javaEnv->SetBooleanArrayRegion(ar, 0, p_aSize, p_aPtr);
+	m_javaEnv->SetBooleanArrayRegion(ar, 0, p_aSize, arrayPtr.data());
 
 	return ar;
 }
