@@ -29,18 +29,27 @@ function integrateObservation()
 	
 	if marioState[3] == 0 then
 		isMarioOnGround = false
-		else
+	else
 		isMarioOnGround = true
 	end
 	
 	if marioState[4] == 0 then
 		isMarioAbleToJump = false
-		else
+	else
 		isMarioAbleToJump = true
 	end
+
+	if marioState[5] == 0 then
+		isMarioAbleToShoot = false
+	else
+		isMarioAbleToShoot = true
+	end
 	
-	isMarioAbleToShoot = marioState[5]
-	isMarioCarrying = marioState[6]
+	if marioState[6] == 0 then
+		isMarioCarrying = false
+	else
+		isMarioCarrying = true
+	end
 	
 	--not sure if these are needed here in lua...
 	killsByTotal = marioState[7]
@@ -50,7 +59,6 @@ function integrateObservation()
 	
 	
 end
----m_action.at(3) = !m_isMarioOnGround || m_isMarioAbleToJump;
 
 function getAction()
 	newAction = not isMarioOnGround or isMarioAbleToJump

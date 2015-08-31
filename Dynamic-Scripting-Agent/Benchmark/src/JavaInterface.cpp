@@ -248,10 +248,11 @@ jobject JavaInterface::cStringToJavaString(const char *p_string)
 
 void JavaInterface::shutdownJava()
 {
-	m_javaEnv.release();
 	if (m_javaVM != nullptr)
 	{
 		m_javaVM->DestroyJavaVM();
-		m_javaVM.release();
+		m_javaVM.reset();
 	}
+	if (m_javaEnv != nullptr)
+		m_javaEnv.reset();
 }
