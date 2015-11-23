@@ -93,7 +93,48 @@ std::vector<int> Agent::getAction()
 }
 
 void Agent::updateWeights()
-{}
+{
+	int active = 0;
+	int minWeight = 0;
+	int maxWeight = 200;
+	
+	for (int i = 0; i < m_ruleCount - 1; i++)
+	{
+		if (m_ruleBase.at(i).active)
+		{
+			active++;
+		}
+	}
+
+	if (active <= 0 || active >= m_ruleCount)
+		return;
+
+	int nonactive = m_ruleCount - active;
+	int adjustment;// = calculateAdjustment(fitness) Not implemented yet.
+	int compensation = -active * adjustment | nonactive;
+	int remains = 0;
+
+	//Credit assignment
+	for (int i = 0; i < m_ruleCount - 1; i++)
+	{
+		if (m_ruleBase.at(i).active)
+			m_ruleBase.at(i).weight += adjustment;
+		else
+			m_ruleBase.at(i).weight += compensation;
+
+		if (m_ruleBase.at(i).weight < minWeight)
+		{
+			remains += (m_ruleBase.at(i).weight - minWeight);
+			m_ruleBase.at(i).weight = minWeight;
+		}
+		else if (m_ruleBase.at(i).weight > maxWeight)
+		{
+			remains += (m_ruleBase.at(i).weight - maxWeight);
+			m_ruleBase.at(i).weight = maxWeight;
+		}
+		//distributeRemains() not implemented yet.
+	}
+}
 
 void Agent::clearScript()
 {}

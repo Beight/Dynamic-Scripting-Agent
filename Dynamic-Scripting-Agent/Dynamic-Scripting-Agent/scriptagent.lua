@@ -9,7 +9,7 @@ isMarioAbleToJump = false
 isMarioAbleToShoot = false
 isMarioCarrying = false
 
---not sure if these variables are need here in lua..
+--not sure if these variables are needed here in lua..
 killsByTotal = 0
 killsByFire = 0
 killsByStomp = 0
