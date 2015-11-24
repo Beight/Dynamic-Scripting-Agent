@@ -10,10 +10,10 @@ public:
 	struct Rule
 	{
 		std::string script;
-		float weight;
+		int weight;
 		bool active;
 
-		Rule(std::string p_script, float p_startWeight) :	script(p_script),
+		Rule(std::string p_script, int p_startWeight) :	script(p_script),
 															weight(p_startWeight),
 															active(false)
 		{}							 
@@ -50,7 +50,7 @@ private:
 	std::vector<int> m_lvlScene;
 	LuaScript m_script;
 	std::vector<Rule> m_ruleBase;
-	int m_ruleCount;
+	int m_scriptRuleCount;
 
 	void updateWeights();
 	void clearScript();

@@ -116,9 +116,7 @@ IBenchmark::Observation Benchmark::getEntireObservation(int p_zLevelScene, int p
 	jintArray marioState = (jintArray)m_jInterface.callJavaObjectMethod(m_marioEnvObj, m_mIdGetMarioState, p_zLevelEnemies);
 	m_jInterface.javaIntArrayToCArray(marioState, obs.marioState);
 
-	//return data to environment class somwhow....
-	//1. send in parameters as refernces and modify values in the method.
-	//2. create a struct and return it.
+	
 	return obs;
 
 

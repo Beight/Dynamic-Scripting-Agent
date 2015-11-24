@@ -15,6 +15,7 @@ public:
 	void intVectorToLuaTable(const std::vector<int> &p_transferVector, const std::string &p_tableName);
 	void clean();
 	bool getonground();
+	void load(const std::string& p_scriptName);
 
 	//templates
 	template<typename T>
@@ -36,78 +37,78 @@ public:
 
 
 
-	template<typename T>
-	T get(const std::string &p_variableName)
-	{
-		if (!m_State)
-		{
-			printError(p_variableName, "Script is not Loaded");
-			return lua_getDefault<T>();
-		}
+	//template<typename T>
+	//T get(const std::string &p_variableName)
+	//{
+	//	if (!m_State)
+	//	{
+	//		printError(p_variableName, "Script is not Loaded");
+	//		return lua_getDefault<T>();
+	//	}
 
-		T result;
-		if (lua_getToStack(p_variableName)) //variable successfully on top on stack
-			result = lua_get<T>();
-		else
-			result = lua_getDefault<T>();
+	//	T result;
+	//	if (lua_getToStack(p_variableName)) //variable successfully on top on stack
+	//		result = lua_get<T>();
+	//	else
+	//		result = lua_getDefault<T>();
 
-		lua_pop(m_state, m_level + 1); //pop all exsiting elements from stack
-		return result;
-	}
+	//	lua_pop(m_state, m_level + 1); //pop all exsiting elements from stack
+	//	return result;
+	//}
 
-	bool lua_getToStack(const std::string &p_variableName)
-	{
-		m_level = 0;
-		std::string var = "";
-		for (unsigned int i = 0; i < p_variableName.size(); i++)
-		{
-			if (p_variableName.at(i) == '.')
-			{
-				if (m_level == 0)
-					lua_getglobal(m_state, var.c_str());
-				else
-					lua_getfield(m_state, -1, var.c_str());
+	//bool lua_getToStack(const std::string &p_variableName)
+	//{
+	//	m_level = 0;
+	//	std::string var = "";
+	//	for (unsigned int i = 0; i < p_variableName.size(); i++)
+	//	{
+	//		if (p_variableName.at(i) == '.')
+	//		{
+	//			if (m_level == 0)
+	//				lua_getglobal(m_state, var.c_str());
+	//			else
+	//				lua_getfield(m_state, -1, var.c_str());
 
 
-				if (lua_isnil(m_state, -1))
-				{
-					printError(p_variableName, var + " is not defined");
-					return false;
-				}
-				else
-				{
-					var = "";
-					m_level++;
-				}	
-			}
-			else
-				var += p_variableName.at(i);
-		}
-		if (m_level == 0)
-			lua_getglobal(m_state, var.c_str());
-		else
-			lua_getfield(m_state, -1, var.c_str());
-		
-		if (lua_isnil(m_state, -1))
-		{
-			printError(p_variableName, var + " is not defined");
-			return false;
-		}
+	//			if (lua_isnil(m_state, -1))
+	//			{
+	//				printError(p_variableName, var + " is not defined");
+	//				return false;
+	//			}
+	//			else
+	//			{
+	//				var = "";
+	//				m_level++;
+	//			}	
+	//		}
+	//		else
+	//			var += p_variableName.at(i);
+	//	}
+	//	if (m_level == 0)
+	//		lua_getglobal(m_state, var.c_str());
+	//	else
+	//		lua_getfield(m_state, -1, var.c_str());
+	//	
+	//	if (lua_isnil(m_state, -1))
+	//	{
+	//		printError(p_variableName, var + " is not defined");
+	//		return false;
+	//	}
 
-		return true;
-	}
+	//	return true;
+	//}
 
-	template<typename T>
-	T lua_get(const std::string &variableName)
-	{
-		return 0;
-	}
+	//template<typename T>
+	//T lua_get(const std::string &variableName)
+	//{
+	//	return 0;
+	//}
 
-	template<typename T>
-	T lua_getDefault()
-	{
-		return 0;
-	}
+	//template<typename T>
+	//T lua_getDefault()
+	//{
+	//	return 0;
+	//}
 
 private:
 	lua_State *m_state;
@@ -116,46 +117,46 @@ private:
 
 };
 
-//template specializations
-template<>
-inline std::string LuaScript::lua_getDefault<std::string>()
-{
-	return "";
-}
-
-template<>
-inline bool LuaScript::lua_get(const std::string &p_variableName)
-{
-	return (bool)lua_toboolean(m_state, -1);
-}
-
-template<>
-inline float LuaScript::lua_get(const std::string &p_variableName)
-{
-	if (!lua_isnumber(m_state, -1))
-		printError(p_variableName, "Not a number");
-
-	return (float)lua_tonumber(m_state, -1);
-}
-
-template<>
-inline int LuaScript::lua_get(const std::string &p_variableName)
-{
-	if (!lua_isnumber(m_state, -1))
-		printError(p_variableName, "Not a number");
-
-	return (int)lua_tonumber(m_state, -1);
-}
-
-template<>
-inline std::string LuaScript::lua_get(const std::string &p_variableName)
-{
-	std::string s = "";
-	if (lua_isstring(m_state, -1))
-		s = std::string(lua_tostring(m_state, -1));
-	else
-		printError(p_variableName, "Not a string");
-
-	return s;
-}
+////template specializations
+//template<>
+//inline std::string LuaScript::lua_getDefault<std::string>()
+//{
+//	return "";
+//}
+//
+//template<>
+//inline bool LuaScript::lua_get(const std::string &p_variableName)
+//{
+//	return lua_toboolean(m_state, -1) != 0;
+//}
+//
+//template<>
+//inline float LuaScript::lua_get(const std::string &p_variableName)
+//{
+//	if (!lua_isnumber(m_state, -1))
+//		printError(p_variableName, "Not a number");
+//
+//	return (float)lua_tonumber(m_state, -1);
+//}
+//
+//template<>
+//inline int LuaScript::lua_get(const std::string &p_variableName)
+//{
+//	if (!lua_isnumber(m_state, -1))
+//		printError(p_variableName, "Not a number");
+//
+//	return (int)lua_tonumber(m_state, -1);
+//}
+//
+//template<>
+//inline std::string LuaScript::lua_get(const std::string &p_variableName)
+//{
+//	std::string s = "";
+//	if (lua_isstring(m_state, -1))
+//		s = std::string(lua_tostring(m_state, -1));
+//	else
+//		printError(p_variableName, "Not a string");
+//
+//	return s;
+//}
 

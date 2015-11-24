@@ -1,4 +1,7 @@
 #include "Agent.h"
+#include <fstream>
+//#include <iostream>
+#include <sstream>
 
 Agent::Agent() : m_name(""),
 				 m_action(),
@@ -18,8 +21,9 @@ Agent::Agent() : m_name(""),
 				 m_marioEgoCol(0),
 				 m_enemiesPos(),
 				 m_script(LuaScript("scriptagent.lua")),
-				 m_ruleCount(0)
+				 m_scriptRuleCount(1)
 {
+	m_ruleBase.push_back(Rule("	newAction = not isMarioOnGround or isMarioAbleToJump\n\n	if newAction == true then\n		action[4] = 1 \n	else\n		action[4] = 0\n	end\n\n", 100));
 }
 
 Agent::~Agent()
@@ -28,6 +32,9 @@ Agent::~Agent()
 
 void Agent::init()
 {
+	
+	generateScript();
+	m_script.load("scriptagent.lua");
 	m_script.callFunction("init", 0, 0);
 	m_action = m_script.getIntVector("action");
 }
@@ -98,7 +105,7 @@ void Agent::updateWeights()
 	int minWeight = 0;
 	int maxWeight = 200;
 	
-	for (int i = 0; i < m_ruleCount - 1; i++)
+	for (unsigned int i = 0; i < m_ruleBase.size() - 1; i++)
 	{
 		if (m_ruleBase.at(i).active)
 		{
@@ -106,16 +113,16 @@ void Agent::updateWeights()
 		}
 	}
 
-	if (active <= 0 || active >= m_ruleCount)
+	if (active <= 0 || active >= m_ruleBase.size())
 		return;
 
-	int nonactive = m_ruleCount - active;
-	int adjustment;// = calculateAdjustment(fitness) Not implemented yet.
+	int nonactive = m_ruleBase.size() - active;
+	int adjustment = 1;// = calculateAdjustment(fitness) Not implemented yet.
 	int compensation = -active * adjustment | nonactive;
 	int remains = 0;
 
 	//Credit assignment
-	for (int i = 0; i < m_ruleCount - 1; i++)
+	for (unsigned int i = 0; i < m_ruleBase.size() - 1; i++)
 	{
 		if (m_ruleBase.at(i).active)
 			m_ruleBase.at(i).weight += adjustment;
@@ -144,10 +151,18 @@ void Agent::generateScript()
 	clearScript();
 	int sumWeights = 0;
 	int maxt = 10;
+
+	std::ofstream out;
+	out.open("scriptagent.lua", std::ios_base::app);
+	out << "\nfunction getAction()\n";
+	out.close();
+
+
+
 	for (unsigned int i = 0; i < m_ruleBase.size(); i++)
 		sumWeights = sumWeights + m_ruleBase.at(i).weight;
 
-	for (int i = 0; i < m_ruleCount; i++)
+	for (int i = 0; i < m_scriptRuleCount; i++)
 	{
 		int t = 0;
 		bool lineadded = false;
@@ -170,11 +185,21 @@ void Agent::generateScript()
 			t = t + 1;
 		}
 	}
-	//Finish Script();
+
+	out.open("scriptagent.lua", std::ios_base::app);
+	out << "end";
+	out.close();
 }
 
 
 bool Agent::insertInScript(const std::string &p_script)
 {
+	std::ofstream file;
+
+
+	file.open("scriptagent.lua", std::ios_base::app);
+	file << p_script;
+	file.close();
+
 	return true;
 }
