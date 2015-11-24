@@ -26,19 +26,19 @@ LuaScript::~LuaScript()
 
 void LuaScript::load(const std::string& p_scriptname)
 {
-	if (m_state)
-		lua_close(m_state);
+	//if (m_state)
+	//	lua_close(m_state);
 
-	m_state = luaL_newstate();
+	//m_state = luaL_newstate();
 	if (luaL_dofile(m_state, p_scriptname.c_str()))// || lua_pcall(m_state, 0, 0, 0))
 	{
 		std::cout << lua_tostring(m_state, -1) << "\n";
 		m_state = 0;
 	}
-	if (m_state)
-	{
-		luaL_openlibs(m_state);
-	}
+	//if (m_state)
+	//{
+	//	luaL_openlibs(m_state);
+	//}
 
 }
 

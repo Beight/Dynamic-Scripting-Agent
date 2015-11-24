@@ -21,9 +21,10 @@ Agent::Agent() : m_name(""),
 				 m_marioEgoCol(0),
 				 m_enemiesPos(),
 				 m_script(LuaScript("scriptagent.lua")),
-				 m_scriptRuleCount(1)
+				 m_scriptRuleCount()
 {
-	m_ruleBase.push_back(Rule("	newAction = not isMarioOnGround or isMarioAbleToJump\n\n	if newAction == true then\n		action[4] = 1 \n	else\n		action[4] = 0\n	end\n\n", 100));
+	m_ruleBase.push_back(Rule("	newAction = not isMarioOnGround or isMarioAbleToJump\n\n	if newAction == true then\n		action[4] = 1 \n	else\n		action[4] = 0\n	end\n\n", 10));
+	m_ruleBase.push_back(Rule("	action[2] = 1\n	action[5] = 1\n", 10));
 }
 
 Agent::~Agent()
@@ -35,7 +36,7 @@ void Agent::init()
 	
 	generateScript();
 	m_script.load("scriptagent.lua");
-	m_script.callFunction("init", 0, 0);
+	//m_script.callFunction("init", 0, 0);
 	m_action = m_script.getIntVector("action");
 }
 
@@ -176,12 +177,13 @@ void Agent::generateScript()
 			while (selected < 0)
 			{
 				sum = sum + m_ruleBase.at(j).weight;
-				if (sum > fraction)
+				if (sum > fraction && m_ruleBase.at(j).active == false)
 					selected = j;
 				else
 					j = j + 1;
 			}
 			lineadded = insertInScript(m_ruleBase.at(selected).script);
+			m_ruleBase.at(selected).active = true;
 			t = t + 1;
 		}
 	}

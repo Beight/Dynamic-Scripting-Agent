@@ -63,13 +63,3 @@ function integrateObservation()
 	
 end
 
-function getAction()
-	newAction = not isMarioOnGround or isMarioAbleToJump
-
-	if newAction == true then
-		action[4] = 1 
-	else
-		action[4] = 0
-	end
-
-end
