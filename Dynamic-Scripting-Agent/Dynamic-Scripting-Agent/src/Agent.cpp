@@ -151,7 +151,7 @@ void Agent::generateScript()
 {
 	clearScript();
 	int sumWeights = 0;
-	int maxt = 10;
+	int maxtries = 10;
 
 	std::ofstream out;
 	out.open("scriptagent.lua", std::ios_base::app);
@@ -165,9 +165,9 @@ void Agent::generateScript()
 
 	for (int i = 0; i < m_scriptRuleCount; i++)
 	{
-		int t = 0;
+		int tries = 0;
 		bool lineadded = false;
-		while (t < maxt && !lineadded)
+		while (tries < maxtries && !lineadded)
 		{
 			int j = 0;
 			int sum = 0;
@@ -184,7 +184,7 @@ void Agent::generateScript()
 			}
 			lineadded = insertInScript(m_ruleBase.at(selected).script);
 			m_ruleBase.at(selected).active = true;
-			t = t + 1;
+			tries = tries + 1;
 		}
 	}
 
