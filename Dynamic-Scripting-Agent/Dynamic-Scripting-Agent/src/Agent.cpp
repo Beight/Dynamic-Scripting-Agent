@@ -20,8 +20,8 @@ Agent::Agent() : m_name(""),
 				 m_marioEgoRow(0),
 				 m_marioEgoCol(0),
 				 m_enemiesPos(),
-				 m_script(LuaScript("scriptagent.lua")),
-				 m_scriptRuleCount()
+				 m_script(),
+				 m_scriptString()
 {
 	m_ruleBase.push_back(Rule("	newAction = not isMarioOnGround or isMarioAbleToJump\n\n	if newAction == true then\n		action[4] = 1 \n	else\n		action[4] = 0\n	end\n\n", 10));
 	m_ruleBase.push_back(Rule("	action[2] = 1\n	action[5] = 1\n", 10));
@@ -33,9 +33,13 @@ Agent::~Agent()
 
 void Agent::init()
 {
-	
+	std::ifstream baseScript("scriptagent.lua");
+	std::stringstream stream;
+	stream << baseScript.rdbuf();
+	m_scriptString = stream.str();
+	baseScript.close();
 	generateScript();
-	m_script.load("scriptagent.lua");
+	m_script.load(m_scriptString);
 	//m_script.callFunction("init", 0, 0);
 	m_action = m_script.getIntVector("action");
 }
@@ -152,18 +156,13 @@ void Agent::generateScript()
 	clearScript();
 	int sumWeights = 0;
 	int maxtries = 10;
-
-	std::ofstream out;
-	out.open("scriptagent.lua", std::ios_base::app);
-	out << "\nfunction getAction()\n";
-	out.close();
-
+	std::string rules("\nfunction getAction()\n");
 
 
 	for (unsigned int i = 0; i < m_ruleBase.size(); i++)
 		sumWeights = sumWeights + m_ruleBase.at(i).weight;
 
-	for (int i = 0; i < m_scriptRuleCount; i++)
+	for (unsigned int i = 0; i < m_ruleBase.size(); i++)
 	{
 		int tries = 0;
 		bool lineadded = false;
@@ -182,26 +181,28 @@ void Agent::generateScript()
 				else
 					j = j + 1;
 			}
-			lineadded = insertInScript(m_ruleBase.at(selected).script);
+			lineadded = true; // insertInScript(m_ruleBase.at(selected).script);
+			rules += m_ruleBase.at(selected).script;
 			m_ruleBase.at(selected).active = true;
 			tries = tries + 1;
 		}
 	}
 
-	out.open("scriptagent.lua", std::ios_base::app);
-	out << "end";
-	out.close();
+	rules += "end";
+
+	m_scriptString += rules;
+
 }
 
 
-bool Agent::insertInScript(const std::string &p_script)
-{
-	std::ofstream file;
-
-
-	file.open("scriptagent.lua", std::ios_base::app);
-	file << p_script;
-	file.close();
-
-	return true;
-}
+//bool Agent::insertInScript(const std::string &p_script)
+//{
+//	std::ofstream file;
+//
+//
+//	file.open("scriptagent.lua", std::ios_base::app);
+//	file << p_script;
+//	file.close();
+//
+//	return true;
+//}

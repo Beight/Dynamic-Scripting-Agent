@@ -1,14 +1,10 @@
 #include "LuaScript.h"
 #include <iostream>
 
-LuaScript::LuaScript(const std::string& p_fileName)
+LuaScript::LuaScript()
 {
 	m_state = luaL_newstate();
-	if (luaL_dofile(m_state, p_fileName.c_str()))// || lua_pcall(m_state, 0, 0, 0))
-	{
-		std::cout << lua_tostring(m_state, -1) << "\n";
-		m_state = 0;
-	}
+
 	if (m_state)
 	{
 		luaL_openlibs(m_state);
@@ -30,7 +26,8 @@ void LuaScript::load(const std::string& p_scriptname)
 	//	lua_close(m_state);
 
 	//m_state = luaL_newstate();
-	if (luaL_dofile(m_state, p_scriptname.c_str()))// || lua_pcall(m_state, 0, 0, 0))
+	
+	if (luaL_dostring(m_state, p_scriptname.c_str()))// || lua_pcall(m_state, 0, 0, 0))
 	{
 		std::cout << lua_tostring(m_state, -1) << "\n";
 		m_state = 0;

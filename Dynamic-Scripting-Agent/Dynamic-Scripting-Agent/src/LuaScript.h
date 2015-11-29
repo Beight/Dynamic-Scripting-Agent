@@ -7,7 +7,7 @@
 class LuaScript
 {
 public:
-	LuaScript(const std::string& p_fileName);
+	LuaScript();
 	~LuaScript();
 	void callFunction(const std::string& p_functionName, int p_nrArguments, int p_nrReturns);
 	void printError(const std::string& p_variableName, const std::string& p_reason);
@@ -15,7 +15,7 @@ public:
 	void intVectorToLuaTable(const std::vector<int> &p_transferVector, const std::string &p_tableName);
 	void clean();
 	bool getonground();
-	void load(const std::string& p_scriptName);
+	void load(const std::string& p_script);
 
 	//templates
 	template<typename T>

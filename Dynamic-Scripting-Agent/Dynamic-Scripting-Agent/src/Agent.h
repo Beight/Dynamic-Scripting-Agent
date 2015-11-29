@@ -50,7 +50,7 @@ private:
 	std::vector<int> m_lvlScene;
 	LuaScript m_script;
 	std::vector<Rule> m_ruleBase;
-	int m_scriptRuleCount;
+	std::string m_scriptString;
 
 	void updateWeights();
 	void clearScript();
