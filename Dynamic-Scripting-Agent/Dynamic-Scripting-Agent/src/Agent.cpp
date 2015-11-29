@@ -21,7 +21,8 @@ Agent::Agent() : m_name(""),
 				 m_marioEgoCol(0),
 				 m_enemiesPos(),
 				 m_script(),
-				 m_scriptString()
+				 m_baseScriptStr(),
+				 m_generatedScriptStr()
 {
 	m_ruleBase.push_back(Rule("	newAction = not isMarioOnGround or isMarioAbleToJump\n\n	if newAction == true then\n		action[4] = 1 \n	else\n		action[4] = 0\n	end\n\n", 10));
 	m_ruleBase.push_back(Rule("	action[2] = 1\n	action[5] = 1\n", 10));
@@ -36,10 +37,10 @@ void Agent::init()
 	std::ifstream baseScript("scriptagent.lua");
 	std::stringstream stream;
 	stream << baseScript.rdbuf();
-	m_scriptString = stream.str();
+	m_baseScriptStr = stream.str();
 	baseScript.close();
 	generateScript();
-	m_script.load(m_scriptString);
+	m_script.load(m_generatedScriptStr);
 	//m_script.callFunction("init", 0, 0);
 	m_action = m_script.getIntVector("action");
 }
@@ -153,7 +154,8 @@ void Agent::clearScript()
 
 void Agent::generateScript()
 {
-	clearScript();
+	//clearScript();
+	m_generatedScriptStr.clear();
 	int sumWeights = 0;
 	int maxtries = 10;
 	std::string rules("\nfunction getAction()\n");
@@ -190,7 +192,7 @@ void Agent::generateScript()
 
 	rules += "end";
 
-	m_scriptString += rules;
+	m_generatedScriptStr = m_baseScriptStr + rules;
 
 }
 
