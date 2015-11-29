@@ -25,7 +25,8 @@ Agent::Agent() : m_name(""),
 				 m_generatedScriptStr()
 {
 	m_ruleBase.push_back(Rule("	newAction = not isMarioOnGround or isMarioAbleToJump\n\n	if newAction == true then\n		action[4] = 1 \n	else\n		action[4] = 0\n	end\n\n", 10));
-	m_ruleBase.push_back(Rule("	action[2] = 1\n	action[5] = 1\n", 10));
+	m_ruleBase.push_back(Rule("	action[2] = 1\n" /*	action[5] = 1\n"*/, 10));
+	m_ruleBase.push_back(Rule("	if isMarioAbleToShoot == true and isMarioOnGround == true then\n	action[5] = 1\n		else\n		action[5] = 0\n	end\n", 10));
 }
 
 Agent::~Agent()
@@ -75,19 +76,6 @@ void Agent::integrateObservation(const std::vector<int> &p_lvlScene, const std::
 	m_marioPos[0] = p_marioPos.at(0);
 	m_marioPos[1] = p_marioPos.at(1);
 	m_enemiesPos = p_enemyPos;
-
-
-	//m_marioStatus = p_marioState.at(0);
-	//m_marioMode = p_marioState.at(1);
-	//m_isMarioOnGround = p_marioState.at(2);
-	//m_isMarioAbleToJump = p_marioState.at(3);
-	//m_isMarioAbleToShoot = p_marioState.at(4);
-	//m_isMarioCarrying = p_marioState.at(5);
-	//m_killsTotal = p_marioState.at(6);
-	//m_killsByFire = p_marioState.at(7);
-	//m_killsByStomp = p_marioState.at(8);
-	//m_killsByShell = p_marioState.at(9); //sent to lua
-
 
 	m_script.vectorToLuaTable(p_marioPos, "marioPos");
 	m_script.vectorToLuaTable(p_enemyPos, "enemyPos");

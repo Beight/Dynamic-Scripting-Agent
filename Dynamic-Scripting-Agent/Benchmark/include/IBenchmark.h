@@ -76,7 +76,6 @@ public:
 
 	/*
 	*	Gets all exisitng observation data.
-	*	Doesn't return the data or save it at the moment.
 	*	The agent is supposed to use this data to decide what action to make.
 	*	
 	*	@param p_levelScene: Has to do with observation detail. Enter 1 to be safe.
@@ -85,13 +84,14 @@ public:
 	virtual Observation getEntireObservation(int p_zLevelScene, int p_zLevelEnemies) = 0;
 
 	/*
-	*	Gets details such as the agents receptivefield and poistion.
+	*	Gets details such as the agents receptivefield and position.
 	*	
-	*	@return: an array containing the details.
-	*	Array[0] = Receptive field width;
-	*	Array[1] = Receptive field height;
-	*	Array[2] = Mario pos X.
-	*	Array[3] = Mario pos Y.;
+	*	@param p_ret, this vector will be filled with the observation data
+	*	Layout of data in  vector:
+	*	vector[0] = Receptive field width;
+	*	vector[1] = Receptive field height;
+	*	vector[2] = Mario pos X
+	*	vector[3] = Mario pos Y
 	*/
 	virtual void getObservationDetails(std::vector<int> &p_ret) = 0;
 	/*

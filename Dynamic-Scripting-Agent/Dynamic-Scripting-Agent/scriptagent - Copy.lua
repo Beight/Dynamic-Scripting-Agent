@@ -72,4 +72,9 @@ function getAction()
 		action[4] = 0
 	end
 	
+	if isMarioAbleToShoot == true then
+		action[5] = 1
+	else
+		action[5] = 0
+	end
 end
