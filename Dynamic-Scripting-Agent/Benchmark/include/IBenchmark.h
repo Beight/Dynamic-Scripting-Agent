@@ -81,7 +81,6 @@ public:
 	*	
 	*	@param p_levelScene: Has to do with observation detail. Enter 1 to be safe.
 	*	@param p_levelEnemies: Has to do with observation detail. Enter 0 to be safe.
-	*	OBS! VOID TYPE IS A PLACEHOLDER!! THIS FUNCTION NEEDS TO RETURN ITS DATA!!
 	*/
 	virtual Observation getEntireObservation(int p_zLevelScene, int p_zLevelEnemies) = 0;
 
