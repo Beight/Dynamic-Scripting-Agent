@@ -66,7 +66,21 @@ public:
 	* @param p_marioPos, the agent's Y position within the receotive grid.
 	*/
 	void integrateObservation(const std::vector<int> &p_lvlScene, const std::vector<int> &p_enmeyScene, const std::vector<int> &p_marioState, const std::vector<float> &p_marioPos, const std::vector<float> &p_enemyPos);
+	/*
+	* Asks the lua script for a vector containing the button presses from the agent.
+	* @return, A vector containing the button presses, 0 = button not pressed, 1 = button pressed.
+	*		[0] = Left
+	*		[1] = Up
+	*		[2] = Right
+	*		[3] = Down
+	*		[4] = A(Jump)
+	*		[5] = B(Run/Shoot/Pickup)
+	*/
 	std::vector<int> getAction();
+
+	/*
+	* Resets the agent, not implemented.
+	*/
 	void reset();
 
 private:

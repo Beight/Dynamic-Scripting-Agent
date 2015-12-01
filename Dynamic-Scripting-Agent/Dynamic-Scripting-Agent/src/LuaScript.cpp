@@ -39,15 +39,6 @@ void LuaScript::load(const std::string& p_scriptname)
 
 }
 
-bool LuaScript::getonground()
-{
-	lua_getglobal(m_state, "isMarioAbleToJump");
-	
-	bool b = lua_toboolean(m_state, -1) != 0;
-
-	return b;
-}
-
 void LuaScript::callFunction(const std::string &p_fucntionName, int p_nrArguments, int nrReturns)
 {
 	lua_getglobal(m_state, p_fucntionName.c_str());

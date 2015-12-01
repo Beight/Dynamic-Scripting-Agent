@@ -7,17 +7,51 @@
 class LuaScript
 {
 public:
+	/*
+	* Constructor
+	*/
 	LuaScript();
+	/*
+	* Destructor
+	*/
 	~LuaScript();
+	/*
+	* Calls a function from a lua script.
+	* @param p_functionName, name of function to be called.
+	* @param p_nrArguments, The number of arguments the function takes.
+	* @param p_p_nrReturns, The number of returns the called function has.
+	*/
 	void callFunction(const std::string& p_functionName, int p_nrArguments, int p_nrReturns);
-	void printError(const std::string& p_variableName, const std::string& p_reason);
-	std::vector<int> getIntVector(const std::string& p_vectorName);
+	/*
+	* Gets a table from the lua and returns it as a int vector.
+	* @p_tableName, name of the tabvle in the lua script.
+	* @return, an int vector containting the data of the table.
+	*/
+	std::vector<int> getIntVectorFromTable(const std::string& p_tableName);
+	/*
+	* Converts an int vector to a lua table and the data writes it to the corresponding lua table in the script.
+	* @param p_transferVector, vector to transfer.
+	* @param p_tableName, name of the table to transfer content to.
+	*/
 	void intVectorToLuaTable(const std::vector<int> &p_transferVector, const std::string &p_tableName);
+	/*
+	* Cleans the Lua stack
+	*/
 	void clean();
-	bool getonground();
+
+	/*
+	* Loads a lua script into the lua state. NOTE! If a script already exits in this instance it will be replaced by the new one.
+	* @param p_script, a string containing the script to be loaded.
+	*/
 	void load(const std::string& p_script);
 
 	//templates
+	
+	/*
+	* Converts an std vector to a lua table and saves it to the lua state.
+	* @param p_vectorToTransfer, what vector to transfer.
+	* @param p_tableName, the table to transfer the data to.
+	*/
 	template<typename T>
 	void vectorToLuaTable(const std::vector<T> &p_vectorToTransfer, const std::string &p_tableName)
 	{
@@ -115,6 +149,7 @@ private:
 	int m_level;
 	std::string m_fileName;
 
+	void printError(const std::string& p_variableName, const std::string& p_reason);
 };
 
 ////template specializations
