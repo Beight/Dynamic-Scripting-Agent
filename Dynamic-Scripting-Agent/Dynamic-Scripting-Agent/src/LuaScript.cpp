@@ -63,7 +63,7 @@ std::vector<int> LuaScript::getIntVector(const std::string &p_vectorName)
 	lua_pushnil(m_state);
 	while (lua_next(m_state, -2))
 	{
-		v.push_back((int)lua_tonumber(m_state, -1));
+		v.push_back(static_cast<int>(lua_tonumber(m_state, -1)));
 		lua_pop(m_state, 1);
 	}
 	clean();
