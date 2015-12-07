@@ -109,7 +109,6 @@ private:
 	std::string m_generatedScriptStr;
 
 	void updateWeights();
-	void clearScript();
 	void generateScript();
 	bool insertInScript(const std::string &p_script);
 };

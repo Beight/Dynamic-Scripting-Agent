@@ -1,6 +1,5 @@
 #include "Agent.h"
 #include <fstream>
-//#include <iostream>
 #include <sstream>
 
 Agent::Agent() : m_name(""),
@@ -25,7 +24,7 @@ Agent::Agent() : m_name(""),
 				 m_generatedScriptStr()
 {
 	m_ruleBase.push_back(Rule("	newAction = not isMarioOnGround or isMarioAbleToJump\n\n	if newAction == true then\n		action[4] = 1 \n	else\n		action[4] = 0\n	end\n\n", 10));
-	m_ruleBase.push_back(Rule("	action[2] = 1\n" /*	action[5] = 1\n"*/, 10));
+	m_ruleBase.push_back(Rule("	action[2] = 1\naction[5] = 1\n", 10));
 	m_ruleBase.push_back(Rule("	if isMarioAbleToShoot == true and isMarioOnGround == true then\n	action[5] = 1\n		else\n		action[5] = 0\n	end\n", 10));
 }
 
@@ -42,8 +41,7 @@ void Agent::init()
 	baseScript.close();
 	generateScript();
 	m_script.load(m_generatedScriptStr);
-	//m_script.callFunction("init", 0, 0);
-	m_action = m_script.getIntVector("action");
+	m_action = m_script.getIntVectorFromTable("action");
 }
 
 void Agent::setObservationDetails(int p_receptiveWidth, int p_receptiveHeight, int p_marioPosRow, int p_marioPosCol)
@@ -86,9 +84,7 @@ void Agent::integrateObservation(const std::vector<int> &p_lvlScene, const std::
 std::vector<int> Agent::getAction()
 {
 	m_script.callFunction("getAction", 0, 0);
-	m_action = m_script.getIntVector("action");
-
-	///m_action.at(3) = !m_isMarioOnGround || m_isMarioAbleToJump; //moved to lua
+	m_action = m_script.getIntVectorFromTable("action");
 
 	return m_action;
 }
@@ -137,12 +133,8 @@ void Agent::updateWeights()
 	}
 }
 
-void Agent::clearScript()
-{}
-
 void Agent::generateScript()
 {
-	//clearScript();
 	m_generatedScriptStr.clear();
 	int sumWeights = 0;
 	int maxtries = 10;
@@ -171,7 +163,7 @@ void Agent::generateScript()
 				else
 					j = j + 1;
 			}
-			lineadded = true; // insertInScript(m_ruleBase.at(selected).script);
+			lineadded = true;
 			rules += m_ruleBase.at(selected).script;
 			m_ruleBase.at(selected).active = true;
 			tries = tries + 1;
@@ -183,16 +175,3 @@ void Agent::generateScript()
 	m_generatedScriptStr = m_baseScriptStr + rules;
 
 }
-
-
-//bool Agent::insertInScript(const std::string &p_script)
-//{
-//	std::ofstream file;
-//
-//
-//	file.open("scriptagent.lua", std::ios_base::app);
-//	file << p_script;
-//	file.close();
-//
-//	return true;
-//}

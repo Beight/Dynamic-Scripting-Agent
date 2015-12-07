@@ -53,10 +53,10 @@ void LuaScript::printError(const std::string& p_variableName, const std::string 
 	std::cout << "Error: can't get " << p_variableName << " " << p_reason << "\n";
 }
 
-std::vector<int> LuaScript::getIntVector(const std::string &p_vectorName)
+std::vector<int> LuaScript::getIntVectorFromTable(const std::string &p_tableName)
 {
 	std::vector<int> v;
-	lua_getglobal(m_state, p_vectorName.c_str());
+	lua_getglobal(m_state, p_tableName.c_str());
 	if (lua_isnil(m_state, -1))
 		return std::vector<int>();
 
