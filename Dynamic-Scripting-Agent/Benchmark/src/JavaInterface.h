@@ -22,11 +22,11 @@ public:
 	*	If a JavaVM already exists the method will return without 
 	*   doing anything and reporting it as a success but a warning will be issued.
 	*
-	*	@param p_nOptions: Number of options that will be used when creating the JavaVM.
+	*	@param p_numberOfOptions: Number of options that will be used when creating the JavaVM.
 	*	@param p_optionList: Options that are used as options when creating the JavaVM. Ex: "Djava-class.path="
 	*	@return: 0 if successful, -1 or 1 if failed.
 	*/
-	int initJava(int p_nOptions, va_list p_optionList);
+	int initJava(int p_numberOfOptions, va_list p_optionList);
 
 	/*
 	*	Creates a pointer to the specified Java class
@@ -44,11 +44,11 @@ public:
 	*	catch it with jthrowable.
 	*
 	*	@param p_javaClass: Java class that the method belongs to.
-	*	@param p_mName: Name of the method.
-	*	@param p_mSig: Signature of the method. 
+	*	@param p_methodName: Name of the method.
+	*	@param p_methodSignature: Signature of the method. 
 	*	@return: The methods ID.
 	*/
-	jmethodID getMethodID(const jclass &p_javaClass, const char *p_mName, const char *p_mSig);
+	jmethodID getMethodID(const jclass &p_javaClass, const char *p_methodName, const char *p_methodSignature);
 
 	/*
 	*	Gets a method ID for a static method.
@@ -56,11 +56,11 @@ public:
 	*	catch it with jthrowable.
 	*
 	*	@param p_javaClass: Java class that the method belongs to.
-	*	@param p_mName: Name of the method.
-	*	@param p_mSig: Signature of the method.
+	*	@param p_methodName: Name of the method.
+	*	@param p_methodSignature: Signature of the method.
 	*	@return: The methods ID.
 	*/
-	jmethodID getStaticMethodID(const jclass &p_javaClass, const char *p_mName, const char *p_mSig);
+	jmethodID getStaticMethodID(const jclass &p_javaClass, const char *p_methodName, const char *p_methodSignature);
 
 	/*
 	*	Calls a void method from a java object.
@@ -68,10 +68,10 @@ public:
 	*	catch it with jthrowable
 	*
 	*	@param p_javaObject: The Java object the method belongs to.
-	*	@param p_methodId: ID of the method to call.
+	*	@param p_methodID: ID of the method to call.
 	*	@param ...: Parameters to send to the Java method.
 	*/
-	void callJavaVoidMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...);
+	void callJavaVoidMethod(const jobject &p_javaObject, const jmethodID p_methodID, ...);
 
 	/*
 	*	Calls a int method from a java object.
@@ -79,11 +79,11 @@ public:
 	*	catch it with jthrowable
 	*
 	*	@param p_javaObject: The Java object the method belongs to.
-	*	@param p_methodId: ID of the method to call.
+	*	@param p_methodID: ID of the method to call.
 	*	@param ...: Parameters to send to the Java method.
 	*	@return: The int value that was returned from the Java method.
 	*/
-	int callJavaIntMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...);
+	int callJavaIntMethod(const jobject &p_javaObject, const jmethodID p_methodID, ...);
 
 	/*
 	*	Calls a boolean method from a java object.
@@ -91,11 +91,11 @@ public:
 	*	catch it with jthrowable
 	*
 	*	@param p_javaObject: The Java object the method belongs to.
-	*	@param p_methodId: ID of the method to call.
+	*	@param p_methodID: ID of the method to call.
 	*	@param ...: Parameters to send to the Java method.
 	*	@return: The bool value that was returned from the Java method.
 	*/
-	bool callJavaBooleanMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...);
+	bool callJavaBooleanMethod(const jobject &p_javaObject, const jmethodID p_methodID, ...);
 
 	/*
 	*	Calls a Java object method from a java object.
@@ -103,11 +103,11 @@ public:
 	*	catch it with jthrowable
 	*
 	*	@param p_javaObject: The Java object the method belongs to.
-	*	@param p_methodId: ID of the method to call.
+	*	@param p_methodID: ID of the method to call.
 	*	@param ...: Parameters to send to the Java method.
 	*	@return: A pointer to the returned Java object.
 	*/
-	jobject callJavaObjectMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...);
+	jobject callJavaObjectMethod(const jobject &p_javaObject, const jmethodID p_methodID, ...);
 
 	/*
 	*	Calls a static Java object method from a java object.
@@ -115,71 +115,71 @@ public:
 	*	catch it with jthrowable
 	*
 	*	@param p_javaClass: The Java Class the method belongs to.
-	*	@param p_methodId: ID of the method to call.
+	*	@param p_methodID: ID of the method to call.
 	*	@param ...: Parameters to send to the Java method.
 	*	@return: A pointer to the returned static Java object.
 	*/
-	jobject callJavaStaticObjectMethod(const jclass &p_javaClass, const jmethodID p_methodId, ...);
+	jobject callJavaStaticObjectMethod(const jclass &p_javaClass, const jmethodID p_methodID, ...);
 
 	/*
 	*	Deletes a local reference for the JavaVM,
 	*	telling the JavaVM we don't need it anymore.
 	*	
-	*	@param p_delObj: Java Object to delete refernce to.
+	*	@param p_ObjectToDelete: Java Object to delete reference to.
 	*/
-	void delLocalRef(jobject p_delObj);
+	void delLocalRef(jobject p_objectToDelete);
 
 	/*
 	*	Deletes a global reference for the JavaVM,
 	*	telling the JavaVM we don't need it anymore.
 	*
-	*	@param p_delObj: Java Object to delete refernce to.
+	*	@param p_ObjectToDelete: Java Object to delete reference to.
 	*/
-	void delGlobalRef(jobject p_delObj);
+	void delGlobalRef(jobject p_objectToDelete);
 
 	/*
 	*	Releases the elements of a Java int array,
 	*	telling the JavaVM we don't need them anymore.
 	*	
-	*	@param p_delarray: Array containing the elements to be released.
-	*	@param p_elems: A pointer to the elements in the array.
+	*	@param p_arrayToDelete: Array containing the elements to be released.
+	*	@param p_elements: A pointer to the elements in the array.
 	*	@param p_mode: Which mode to delete it with, 0, JNI_COMMIT or JNI_ABORT. Consult JNI documentation for explation of the three.
 	*/
-	void releaseIntArrayElem(jintArray &p_delarray, jint *p_elems, int p_mode);
+	void releaseIntArrayElem(jintArray &p_arrayToDelete, jint *p_elements, int p_mode);
 
 	/*
 	*	Releases the elements of a Java float array,
 	*	telling the JavaVM we don't need them anymore.
 	*
-	*	@param p_delarray: Array containing the elements to be released.
-	*	@param p_elems: A pointer to the elements in the array.
+	*	@param p_arrayToDelete: Array containing the elements to be released.
+	*	@param p_elements: A pointer to the elements in the array.
 	*	@param p_mode: Which mode to delete it with, 0, JNI_COMMIT or JNI_ABORT. Consult JNI documentation for explation of the three.
 	*/
-	void releaseFloatArrayElem(jfloatArray &p_delarray, jfloat *p_elems, int p_mode);
+	void releaseFloatArrayElem(jfloatArray &p_arrayToDelete, jfloat *p_elements, int p_mode);
 
 	/*
 	*	Releases the elements of a Java boolean array,
 	*	telling the JavaVM we don't need them anymore.
 	*
-	*	@param p_delarray: Array containing the elements to be released.
-	*	@param p_elems: A pointer to the elements in the array.
+	*	@param p_arrayToDelete: Array containing the elements to be released.
+	*	@param p_elements: A pointer to the elements in the array.
 	*	@param p_mode: Which mode to delete it with, 0, JNI_COMMIT or JNI_ABORT. Consult JNI documentation for explation of the three.
 	*/
-	void releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_elems, int p_mode);
+	void releaseBoolArrayElem(jbooleanArray &p_arrayToDelete, jboolean *p_elements, int p_mode);
 
 	/*
-	*	Converts an Java int array into a C int array.
+	*	Converts an Java int array into a int vector.
 	*
 	*	@param p_array: Array to be converted
-	*	@return: Pointer to the int array containing the converted elememts
+	*	@param p_ret: vector filled with values from the java array
 	*/
 	void javaIntArrayToCArray(jintArray &p_array, std::vector<int> &p_ret);
 
 	/*
-	*	Converts an Java float array into a C float array.
+	*	Converts an Java float array into a float vector.
 	*
 	*	@param p_array: Array to be converted
-	*	@return: Pointer to the float array containing the converted elememts
+	*	@param p_ret: vector filled with values from the java array
 	*/
 	void javaFloatArrayToCArray(jfloatArray &p_array, std::vector<float> &p_ret);
 

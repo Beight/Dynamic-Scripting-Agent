@@ -11,7 +11,7 @@ JavaInterface::~JavaInterface()
 {
 }
 
-int JavaInterface::initJava(int p_nOptions, va_list p_optionList)
+int JavaInterface::initJava(int p_numberOfOptions, va_list p_optionList)
 {
 	std::cout << "Initializing Java.. \n";
 	if (m_javaEnv != nullptr)
@@ -22,15 +22,15 @@ int JavaInterface::initJava(int p_nOptions, va_list p_optionList)
 	JavaVMInitArgs vmArgs;
 	vmArgs.version = JNI_VERSION_1_8;
 	vmArgs.ignoreUnrecognized = JNI_FALSE;
-	vmArgs.nOptions = p_nOptions;
+	vmArgs.nOptions = p_numberOfOptions;
 
-	std::vector<JavaVMOption> options(p_nOptions);
+	std::vector<JavaVMOption> options(p_numberOfOptions);
 
-	if (p_nOptions > 0)
+	if (p_numberOfOptions > 0)
 	{	
-		for (int i = 0; i < p_nOptions; i++)
+		for (int i = 0; i < p_numberOfOptions; i++)
 		{
-			options.at(i).optionString = va_arg(p_optionList, char*);
+			options.at(i).optionString = va_arg(p_numberOfOptions, char*);
 		}
 		vmArgs.options = options.data();
 	}
@@ -68,59 +68,59 @@ jclass JavaInterface::createJavaClass(const char *p_javaClassName)
 	return javaClass;
 }
 
-jmethodID JavaInterface::getMethodID(const jclass &p_javaClass, const char *p_mName, const char *p_mSig)
+jmethodID JavaInterface::getMethodID(const jclass &p_javaClass, const char *p_methodName, const char *p_methodSignature)
 {
-	jmethodID jmid = m_javaEnv->GetMethodID(p_javaClass, p_mName, p_mSig);
+	jmethodID jmid = m_javaEnv->GetMethodID(p_javaClass, p_methodName, p_methodSignature);
 	if (m_javaEnv->ExceptionCheck())
 	{
-		std::cerr << "Error: Can't find Java method id for " << p_mName << ".\n";
+		std::cerr << "Error: Can't find Java method id for " << p_methodName << ".\n";
 		m_javaEnv->ExceptionDescribe();
 		m_javaEnv->ExceptionClear();
 	}
 	else
-		std::cout << "Java method " << p_mName << " found! id: " << jmid << "\n";
+		std::cout << "Java method " << p_methodName << " found! id: " << jmid << "\n";
 	
 	return jmid;
 }
 
-jmethodID JavaInterface::getStaticMethodID(const jclass &p_javaClass, const char *p_mName, const char *p_mSig)
+jmethodID JavaInterface::getStaticMethodID(const jclass &p_javaClass, const char *p_methodName, const char *p_methodSignature)
 {
-	jmethodID jmid = m_javaEnv->GetStaticMethodID(p_javaClass, p_mName, p_mSig);
+	jmethodID jmid = m_javaEnv->GetStaticMethodID(p_javaClass, p_methodName, p_methodSignature);
 	if (m_javaEnv->ExceptionCheck())
 	{
-		std::cerr << "Error: Can't find Java static method id for " << p_mName << ".\n";
+		std::cerr << "Error: Can't find Java static method id for " << p_methodName << ".\n";
 		m_javaEnv->ExceptionDescribe();
 		m_javaEnv->ExceptionClear();
 	}
 	else
-		std::cout << "Java static method " << p_mName << " found! id: " << jmid << "\n";
+		std::cout << "Java static method " << p_methodName << " found! id: " << jmid << "\n";
 
 	return jmid;
 }
 
-void JavaInterface::callJavaVoidMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...)
+void JavaInterface::callJavaVoidMethod(const jobject &p_javaObject, const jmethodID p_methodID, ...)
 {
 	va_list arg;
-	va_start(arg, p_methodId);
-	m_javaEnv->CallVoidMethodV(p_javaObject, p_methodId, arg);
+	va_start(arg, p_methodID);
+	m_javaEnv->CallVoidMethodV(p_javaObject, p_methodID, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionCheck())
 	{
-		std::cerr << "Error: Calling Java void method failed. Id: " << p_methodId << "\n";
+		std::cerr << "Error: Calling Java void method failed. Id: " << p_methodID << "\n";
 		m_javaEnv->ExceptionDescribe();
 		m_javaEnv->ExceptionClear();
 	}
 }
 
-int JavaInterface::callJavaIntMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...)
+int JavaInterface::callJavaIntMethod(const jobject &p_javaObject, const jmethodID p_methodID, ...)
 {
 	va_list arg;
-	va_start(arg, p_methodId);
-	jint javaInt = m_javaEnv->CallIntMethodV(p_javaObject, p_methodId, arg);
+	va_start(arg, p_methodID);
+	jint javaInt = m_javaEnv->CallIntMethodV(p_javaObject, p_methodID, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionCheck())
 	{
-		std::cerr << "Error: Calling Java int method failed. Id: " << p_methodId << "\n";
+		std::cerr << "Error: Calling Java int method failed. Id: " << p_methodID << "\n";
 		m_javaEnv->ExceptionDescribe();
 		m_javaEnv->ExceptionClear();
 	}
@@ -128,78 +128,77 @@ int JavaInterface::callJavaIntMethod(const jobject &p_javaObject, const jmethodI
 }
 
 
-bool JavaInterface::callJavaBooleanMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...)
+bool JavaInterface::callJavaBooleanMethod(const jobject &p_javaObject, const jmethodID p_methodID, ...)
 {
 	va_list arg;
-	va_start(arg, p_methodId);
-	jboolean javabool = m_javaEnv->CallBooleanMethodV(p_javaObject, p_methodId, arg);
+	va_start(arg, p_methodID);
+	jboolean javabool = m_javaEnv->CallBooleanMethodV(p_javaObject, p_methodID, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionCheck())
 	{
-		std::cerr << "Error: Calling Java boolean method failed. Id: " << p_methodId << "\n";
+		std::cerr << "Error: Calling Java boolean method failed. Id: " << p_methodID << "\n";
 		m_javaEnv->ExceptionDescribe();
 		m_javaEnv->ExceptionClear();
 	}
 	return javabool;
 }
 
-jobject JavaInterface::callJavaObjectMethod(const jobject &p_javaObject, const jmethodID p_methodId, ...)
+jobject JavaInterface::callJavaObjectMethod(const jobject &p_javaObject, const jmethodID p_methodID, ...)
 {
 	va_list arg;
-	va_start(arg, p_methodId);
-	jobject javaObj = m_javaEnv->CallObjectMethodV(p_javaObject, p_methodId, arg);
+	va_start(arg, p_methodID);
+	jobject javaObj = m_javaEnv->CallObjectMethodV(p_javaObject, p_methodID, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionCheck())
 	{
-		std::cerr << "Error: Calling Java object method failed. Id: " << p_methodId << "\n";
+		std::cerr << "Error: Calling Java object method failed. Id: " << p_methodID << "\n";
 		m_javaEnv->ExceptionDescribe();
 		m_javaEnv->ExceptionClear();
 	}
 	return javaObj;
 }
 
-jobject JavaInterface::callJavaStaticObjectMethod(const jclass &p_javaClass, const jmethodID p_methodId, ...)
+jobject JavaInterface::callJavaStaticObjectMethod(const jclass &p_javaClass, const jmethodID p_methodID, ...)
 {
 	va_list arg;
-	va_start(arg, p_methodId);
-
-	jobject javaObj = m_javaEnv->CallStaticObjectMethodV(p_javaClass, p_methodId, arg);
+	va_start(arg, p_methodID);
+	jobject javaObj = m_javaEnv->CallStaticObjectMethodV(p_javaClass, p_methodID, arg);
 	va_end(arg);
 	if (m_javaEnv->ExceptionCheck())
 	{
-		std::cerr << "Error: Calling Java static object method failed. Id: " << p_methodId << "\n";
+		std::cerr << "Error: Calling Java static object method failed. Id: " << p_methodID << "\n";
 		m_javaEnv->ExceptionDescribe();
 		m_javaEnv->ExceptionClear();
 	}
 	return javaObj;
 }
 
-void JavaInterface::delLocalRef(jobject p_delObj)
+void JavaInterface::deleteLocalRef(jobject p_objectToDelete)
 {
-	m_javaEnv->DeleteLocalRef(p_delObj);
+	m_javaEnv->DeleteLocalRef(p_objectToDelete);
 }
 
-void JavaInterface::delGlobalRef(jobject p_delObj)
+void JavaInterface::deleteGlobalRef(jobject p_objectToDelete)
 {
-	m_javaEnv->DeleteGlobalRef(p_delObj);
+	m_javaEnv->DeleteGlobalRef(p_objectToDelete);
 }
 
-void JavaInterface::releaseIntArrayElem(jintArray &p_delarray, jint *p_elems, int p_mode)
+void JavaInterface::releaseIntArrayElem(jintArray &p_arrayToDelete, jint *p_elements, int p_mode)
 {
-	m_javaEnv->ReleaseIntArrayElements(p_delarray, p_elems, p_mode);
+	m_javaEnv->ReleaseIntArrayElements(p_arrayToDelete, p_elements, p_mode);
 }
 
-void JavaInterface::releaseFloatArrayElem(jfloatArray& p_delarray, jfloat *p_elems, int p_mode)
+void JavaInterface::releaseFloatArrayElem(jfloatArray& p_arrayToDelete, jfloat *p_elements, int p_mode)
 {
-	m_javaEnv->ReleaseFloatArrayElements(p_delarray, p_elems, p_mode);
+	m_javaEnv->ReleaseFloatArrayElements(p_arrayToDelete, p_elements, p_mode);
 }
 
-void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_delarray, jboolean *p_elems, int p_mode)
+void JavaInterface::releaseBoolArrayElem(jbooleanArray &p_arrayToDelete, jboolean *p_elements, int p_mode)
 {
-	m_javaEnv->ReleaseBooleanArrayElements(p_delarray, p_elems, p_mode);
+	m_javaEnv->ReleaseBooleanArrayElements(p_arrayToDelete, p_elements, p_mode);
 }
 
-void JavaInterface::javaIntArrayToCArray(jintArray &p_array, std::vector<int> &p_ret)
+void JavaInterface::javaIntArrayToVector(jintArray &p_array, std::vector<int> &p_ret)
 {
 	std::unique_ptr<jint> ptr(m_javaEnv->GetIntArrayElements(p_array, 0));
 	jsize size = m_javaEnv->GetArrayLength(p_array);
@@ -212,7 +211,7 @@ void JavaInterface::javaIntArrayToCArray(jintArray &p_array, std::vector<int> &p
 }
 
 
-void JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array, std::vector<float> &p_ret)
+void JavaInterface::javaFloatArrayToVector(jfloatArray &p_array, std::vector<float> &p_ret)
 {
 	std::unique_ptr<jfloat> ptr(m_javaEnv->GetFloatArrayElements(p_array, 0));
 	jsize size = m_javaEnv->GetArrayLength(p_array);
@@ -224,7 +223,7 @@ void JavaInterface::javaFloatArrayToCArray(jfloatArray &p_array, std::vector<flo
 	m_javaEnv->DeleteLocalRef(p_array);
 }
 
-jbooleanArray JavaInterface::cIntArrayToJavaBoolArray(const std::vector<int> &p_array, const int p_aSize)
+jbooleanArray JavaInterface::IntVectorToJavaBoolArray(const std::vector<int> &p_array, const int p_aSize)
 {
 	jbooleanArray ar = m_javaEnv->NewBooleanArray(p_aSize);
 	std::vector<jboolean> arrayPtr(p_aSize);
