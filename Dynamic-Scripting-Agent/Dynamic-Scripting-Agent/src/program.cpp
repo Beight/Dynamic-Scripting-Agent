@@ -22,7 +22,7 @@ int main(int argc, char argv[])
 		if (env.init() < 0)
 		{
 			env.destroy();
-			return -1;
+			return EXIT_FAILURE;
 		}
 
 		env.run();

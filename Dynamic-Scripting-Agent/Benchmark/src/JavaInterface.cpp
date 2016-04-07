@@ -60,7 +60,7 @@ jclass JavaInterface::createJavaClass(const char *p_javaClassName)
 	{
 		std::cerr << "Error: Can't find Java class " << p_javaClassName << ".\n";
 		m_javaEnv->ExceptionDescribe();
-		throw m_javaEnv->ExceptionOccurred();
+		m_javaEnv->ExceptionClear();
 	}
 	else
 		std::cout << "Java class " << p_javaClassName << " found.\n";
@@ -75,7 +75,7 @@ jmethodID JavaInterface::getMethodID(const jclass &p_javaClass, const char *p_mN
 	{
 		std::cerr << "Error: Can't find Java method id for " << p_mName << ".\n";
 		m_javaEnv->ExceptionDescribe();
-		throw m_javaEnv->ExceptionOccurred();
+		m_javaEnv->ExceptionClear();
 	}
 	else
 		std::cout << "Java method " << p_mName << " found! id: " << jmid << "\n";
@@ -90,7 +90,7 @@ jmethodID JavaInterface::getStaticMethodID(const jclass &p_javaClass, const char
 	{
 		std::cerr << "Error: Can't find Java static method id for " << p_mName << ".\n";
 		m_javaEnv->ExceptionDescribe();
-		throw m_javaEnv->ExceptionOccurred();
+		m_javaEnv->ExceptionClear();
 	}
 	else
 		std::cout << "Java static method " << p_mName << " found! id: " << jmid << "\n";
@@ -108,7 +108,7 @@ void JavaInterface::callJavaVoidMethod(const jobject &p_javaObject, const jmetho
 	{
 		std::cerr << "Error: Calling Java void method failed. Id: " << p_methodId << "\n";
 		m_javaEnv->ExceptionDescribe();
-		throw m_javaEnv->ExceptionOccurred();
+		m_javaEnv->ExceptionClear();
 	}
 }
 
@@ -122,7 +122,7 @@ int JavaInterface::callJavaIntMethod(const jobject &p_javaObject, const jmethodI
 	{
 		std::cerr << "Error: Calling Java int method failed. Id: " << p_methodId << "\n";
 		m_javaEnv->ExceptionDescribe();
-		throw m_javaEnv->ExceptionOccurred();
+		m_javaEnv->ExceptionClear();
 	}
 	return javaInt;
 }
@@ -138,7 +138,7 @@ bool JavaInterface::callJavaBooleanMethod(const jobject &p_javaObject, const jme
 	{
 		std::cerr << "Error: Calling Java boolean method failed. Id: " << p_methodId << "\n";
 		m_javaEnv->ExceptionDescribe();
-		throw m_javaEnv->ExceptionOccurred();
+		m_javaEnv->ExceptionClear();
 	}
 	return javabool;
 }
@@ -153,7 +153,7 @@ jobject JavaInterface::callJavaObjectMethod(const jobject &p_javaObject, const j
 	{
 		std::cerr << "Error: Calling Java object method failed. Id: " << p_methodId << "\n";
 		m_javaEnv->ExceptionDescribe();
-		throw m_javaEnv->ExceptionOccurred();
+		m_javaEnv->ExceptionClear();
 	}
 	return javaObj;
 }
@@ -169,7 +169,7 @@ jobject JavaInterface::callJavaStaticObjectMethod(const jclass &p_javaClass, con
 	{
 		std::cerr << "Error: Calling Java static object method failed. Id: " << p_methodId << "\n";
 		m_javaEnv->ExceptionDescribe();
-		throw m_javaEnv->ExceptionOccurred();
+		m_javaEnv->ExceptionClear();
 	}
 	return javaObj;
 }
@@ -246,11 +246,8 @@ jobject JavaInterface::cStringToJavaString(const char *p_string)
 
 void JavaInterface::shutdownJava()
 {
-	if (m_javaVM != nullptr)
-	{
-		m_javaVM->DestroyJavaVM();
-		m_javaVM.reset();
-	}
-	if (m_javaEnv != nullptr)
-		m_javaEnv.reset();
+	//if (m_javaVM != nullptr)
+	//{
+	//	m_javaVM->DestroyJavaVM();
+	//}
 }

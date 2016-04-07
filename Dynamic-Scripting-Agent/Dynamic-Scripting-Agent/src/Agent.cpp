@@ -25,7 +25,7 @@ Agent::Agent() : m_name(""),
 {
 	m_ruleBase.push_back(Rule("	newAction = not isMarioOnGround or isMarioAbleToJump\n\n	if newAction == true then\n		action[4] = 1 \n	else\n		action[4] = 0\n	end\n\n", 10));
 	m_ruleBase.push_back(Rule("	action[2] = 1\naction[5] = 1\n", 10));
-	m_ruleBase.push_back(Rule("	if isMarioAbleToShoot == true and isMarioOnGround == true then\n	action[5] = 1\n		else\n		action[5] = 0\n	end\n", 10));
+	//m_ruleBase.push_back(Rule("	if isMarioAbleToShoot == true and isMarioOnGround == true then\n	action[5] = 1\n		else\n		action[5] = 0\n	end\n", 10));
 }
 
 Agent::~Agent()
@@ -103,7 +103,7 @@ void Agent::updateWeights()
 		}
 	}
 
-	if (active <= 0 || active >= m_ruleBase.size())
+	if (active <= 0 || active >= (int)m_ruleBase.size())
 		return;
 
 	int nonactive = m_ruleBase.size() - active;

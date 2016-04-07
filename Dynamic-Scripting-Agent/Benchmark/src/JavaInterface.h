@@ -207,8 +207,8 @@ public:
 	void shutdownJava();
 
 private:
-	std::unique_ptr<JNIEnv_> m_javaEnv;
-	std::unique_ptr<JavaVM> m_javaVM;
+	std::shared_ptr<JNIEnv_> m_javaEnv;
+	std::shared_ptr<JavaVM> m_javaVM;
 	
 
 };
