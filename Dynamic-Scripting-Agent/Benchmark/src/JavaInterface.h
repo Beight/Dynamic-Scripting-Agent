@@ -40,8 +40,8 @@ public:
 
 	/*
 	*	Gets a method ID that is used to call the method.
-	*	If the method is not found an exception is thrown,
-	*	catch it with jthrowable.
+	*	If the method is not found Java throws an exception and
+	*	the returned ID will be null.
 	*
 	*	@param p_javaClass: Java class that the method belongs to.
 	*	@param p_methodName: Name of the method.
@@ -52,8 +52,8 @@ public:
 
 	/*
 	*	Gets a method ID for a static method.
-	*	If the method is not found an exception is thrown,
-	*	catch it with jthrowable.
+	*	If the method is not found Java throws an exception and
+	*	the returned ID will be null.
 	*
 	*	@param p_javaClass: Java class that the method belongs to.
 	*	@param p_methodName: Name of the method.
@@ -64,8 +64,8 @@ public:
 
 	/*
 	*	Calls a void method from a java object.
-	*	If the call fails an exception is thrown,
-	*	catch it with jthrowable
+	*	If the call fails Java throws an exception,
+	*	which the method outputs and clears.
 	*
 	*	@param p_javaObject: The Java object the method belongs to.
 	*	@param p_methodID: ID of the method to call.
@@ -75,8 +75,9 @@ public:
 
 	/*
 	*	Calls a int method from a java object.
-	*	If the call fails an exception is thrown,
-	*	catch it with jthrowable
+	*	If the call fails Java throws an exception,
+	*	which the method outputs and clears.
+	*	The returned object will be null if an exceotion is thrown by Java
 	*
 	*	@param p_javaObject: The Java object the method belongs to.
 	*	@param p_methodID: ID of the method to call.
@@ -87,8 +88,9 @@ public:
 
 	/*
 	*	Calls a boolean method from a java object.
-	*	If the call fails an exception is thrown,
-	*	catch it with jthrowable
+	*	If the call fails Java throws an exception,
+	*	which the method outputs and clears.
+	*	The returned object will be null if an exceotion is thrown by Java
 	*
 	*	@param p_javaObject: The Java object the method belongs to.
 	*	@param p_methodID: ID of the method to call.
@@ -99,8 +101,9 @@ public:
 
 	/*
 	*	Calls a Java object method from a java object.
-	*	If the call fails an exception is thrown,
-	*	catch it with jthrowable
+	*	If the call fails Java throws an exception,
+	*	which the method outputs and clears.
+	*	The returned object will be null if an exceotion is thrown by Java
 	*
 	*	@param p_javaObject: The Java object the method belongs to.
 	*	@param p_methodID: ID of the method to call.
@@ -111,8 +114,9 @@ public:
 
 	/*
 	*	Calls a static Java object method from a java object.
-	*	If the call fails an exception is thrown,
-	*	catch it with jthrowable
+	*	If the call fails Java throws an exception,
+	*	which the method outputs and clears.
+	*	The returned object will be null if an exceotion is thrown by Java
 	*
 	*	@param p_javaClass: The Java Class the method belongs to.
 	*	@param p_methodID: ID of the method to call.
@@ -127,7 +131,7 @@ public:
 	*	
 	*	@param p_ObjectToDelete: Java Object to delete reference to.
 	*/
-	void delLocalRef(jobject p_objectToDelete);
+	void deleteLocalRef(jobject p_objectToDelete);
 
 	/*
 	*	Deletes a global reference for the JavaVM,
@@ -135,7 +139,7 @@ public:
 	*
 	*	@param p_ObjectToDelete: Java Object to delete reference to.
 	*/
-	void delGlobalRef(jobject p_objectToDelete);
+	void deleteGlobalRef(jobject p_objectToDelete);
 
 	/*
 	*	Releases the elements of a Java int array,
@@ -173,7 +177,7 @@ public:
 	*	@param p_array: Array to be converted
 	*	@param p_ret: vector filled with values from the java array
 	*/
-	void javaIntArrayToCArray(jintArray &p_array, std::vector<int> &p_ret);
+	void javaIntArrayToVector(jintArray &p_array, std::vector<int> &p_ret);
 
 	/*
 	*	Converts an Java float array into a float vector.
@@ -181,17 +185,17 @@ public:
 	*	@param p_array: Array to be converted
 	*	@param p_ret: vector filled with values from the java array
 	*/
-	void javaFloatArrayToCArray(jfloatArray &p_array, std::vector<float> &p_ret);
+	void javaFloatArrayToVector(jfloatArray &p_array, std::vector<float> &p_ret);
 
 	/*
-	*	Converts an C int array into a Java boolean array.
+	*	Converts an int vector into a Java boolean array.
 	*
 	*	@param p_array: Array to be converted
 	*	@param p_aPtr: A Pointer that will point to the coverted array.
 	*	@param p_aSize: Size of the array to be converted.
 	*	@return: A Java boolean array.
 	*/
-	jbooleanArray cIntArrayToJavaBoolArray(const std::vector<int> &p_array, const int p_aSize);
+	jbooleanArray intVectorToJavaBoolArray(const std::vector<int> &p_array, const int p_aSize);
 
 	/*
 	*	Converts a C string into a Java string which can be used as a parameter in a Java method call.

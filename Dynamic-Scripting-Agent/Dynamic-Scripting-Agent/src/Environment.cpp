@@ -22,20 +22,20 @@ int Environment::init()
 
 void Environment::run()
 {
-	m_benchmark->reset("-vis on -echo on");
-	std::vector<int> obsDet;
-	m_benchmark->getObservationDetails(obsDet);
-	m_agent.setObservationDetails(obsDet.at(0), obsDet.at(1), obsDet.at(2), obsDet.at(3));
+	m_benchmark->reset("-vis on -echo on -fps 100");
+	std::vector<int> observationDetails;
+	m_benchmark->getObservationDetails(observationDetails);
+	m_agent.setObservationDetails(observationDetails.at(0), observationDetails.at(1), observationDetails.at(2), observationDetails.at(3));
 
 	while (!m_benchmark->isLevelFinished())
 	{
 		m_benchmark->tick();
-		IBenchmark::Observation obs = m_benchmark->getEntireObservation(1, 0);
-		m_agent.integrateObservation(obs.lvlScene, obs.enemyScene, obs.marioState, obs.marioPos, obs.enemyPos);
+		IBenchmark::Observation observation = m_benchmark->getEntireObservation(1, 0);
+		m_agent.integrateObservation(observation.levelScene, observation.enemyScene, observation.marioState, observation.marioPosition, observation.enemyPosition);
 		m_benchmark->performAction(m_agent.getAction());
 	}
-	std::vector<int> eval;
-	m_benchmark->getEvaluationInfo(eval);
+	std::vector<int> evaluation;
+	m_benchmark->getEvaluationInfo(evaluation);
 }
 
 void Environment::destroy()

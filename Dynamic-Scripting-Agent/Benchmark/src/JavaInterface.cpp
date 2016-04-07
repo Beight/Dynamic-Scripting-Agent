@@ -223,7 +223,7 @@ void JavaInterface::javaFloatArrayToVector(jfloatArray &p_array, std::vector<flo
 	m_javaEnv->DeleteLocalRef(p_array);
 }
 
-jbooleanArray JavaInterface::IntVectorToJavaBoolArray(const std::vector<int> &p_array, const int p_aSize)
+jbooleanArray JavaInterface::intVectorToJavaBoolArray(const std::vector<int> &p_array, const int p_aSize)
 {
 	jbooleanArray ar = m_javaEnv->NewBooleanArray(p_aSize);
 	std::vector<jboolean> arrayPtr(p_aSize);

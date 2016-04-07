@@ -9,7 +9,7 @@ public:
 	Benchmark();
 	~Benchmark();
 
-	int init(int p_numJavaOptions, ...) override;
+	int init(int p_numberOfJavaOptions, ...) override;
 
 	void reset(const char *p_options) override;
 	bool isLevelFinished() override;
@@ -21,21 +21,21 @@ public:
 
 
 private:
-	JavaInterface m_jInterface;
-	jclass m_marioEnvCl;
-	jobject m_marioEnvObj;
+	JavaInterface m_javaInterface;
+	jclass m_EnvironmentClass;
+	jobject m_EnvironmentObject;
 	int m_numberOfButtons;
-	jmethodID m_mIdReset;
-	jmethodID m_mIdIsLevelFinished;
-	jmethodID m_mIdTick;
-	jmethodID m_mIdGetEvalutationInfo;
-	jmethodID m_mIdGetSerializedLevelSceneObservationZ;
-	jmethodID m_mIdGetSerializedEnemiesObservationZ;
-	jmethodID m_mIdGetObservationDetails;
-	jmethodID m_mIdPerformAction;
-	jmethodID m_mIdGetMarioPos;
-	jmethodID m_mIdGetEnemiesPos;
-	jmethodID m_mIdGetMarioState;
+	jmethodID m_methodIDReset;
+	jmethodID m_methodIDIsLevelFinished;
+	jmethodID m_methodIDTick;
+	jmethodID m_methodIDGetEvalutationInfo;
+	jmethodID m_methodIDGetSerializedLevelSceneObservationZ;
+	jmethodID m_methodIDGetSerializedEnemiesObservationZ;
+	jmethodID m_methodIDGetObservationDetails;
+	jmethodID m_methodIDPerformAction;
+	jmethodID m_methodIDGetMarioPos;
+	jmethodID m_methodIDGetEnemiesPos;
+	jmethodID m_methodIDGetMarioState;
 
 	void getMethodIds() override;
 	void shutdown() override;

@@ -6,11 +6,11 @@ class IBenchmark
 public:
 	struct Observation
 	{
-		std::vector<int> lvlScene;
+		std::vector<int> levelScene;
 		std::vector<int> enemyScene;
 		std::vector<int> marioState;
-		std::vector<float> marioPos;
-		std::vector<float> enemyPos;
+		std::vector<float> marioPosition;
+		std::vector<float> enemyPosition;
 	};
 	/*
 	*	Creates the benchmark.
@@ -26,7 +26,7 @@ public:
 	*	@param ...: options for the creation of the JavaVM.
 	*	@return: 0 on success, negative number on failure.
 	*/
-	virtual int init(int p_numJavaOptions, ...) = 0;
+	virtual int init(int p_numberOfJavaOptions, ...) = 0;
 
 	/*
 	*	Reset the benchmark.
